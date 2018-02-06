@@ -1,0 +1,71 @@
+/* CSS declarations go here */
+
+* {
+    margin: 0;
+    padding: 0;
+}
+
+.gameContainer {
+    height: 90vh;
+    width: 90vh;
+    flex-direction: column;
+    display: flex;
+    align-content: stretch;
+    margin-left: auto;
+    margin-right: auto;
+    box-shadow: 2px 2px 8px grey;
+}
+.dotsRow {
+    flex-grow: 1;
+    /*align-items: stretch;*/
+    align-content: center;
+    justify-content: center;
+    display: flex;
+}
+.dot {
+    padding: 3px;
+    display: inline-block;
+    flex-grow: 1;
+    cursor: pointer;
+}
+.dotsRow:nth-child(even) .dot:nth-child(even) {
+    background-color: lightblue;
+}
+.dotsRow:nth-child(even) .dot:nth-child(odd) {
+    background-color: cornflowerblue;
+}
+.dotsRow:nth-child(odd) .dot:nth-child(even) {
+    background-color: cornflowerblue;
+}
+.dotsRow:nth-child(odd) .dot:nth-child(odd) {
+    background-color: lightblue;
+}
+.dotsRow:nth-child(even) .dot:nth-child(even):hover {
+    background-color: aliceblue;
+}
+.dotsRow:nth-child(even) .dot:nth-child(odd):hover {
+    background-color: aliceblue;
+}
+.dotsRow:nth-child(odd) .dot:nth-child(even):hover {
+    background-color: aliceblue;
+}
+.dotsRow:nth-child(odd) .dot:nth-child(odd):hover {
+    background-color: aliceblue;
+}
+.dot .black {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: #050505;
+    box-shadow: 2px 2px 4px #959595;
+}
+.dot .white {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: white;
+    box-shadow: 2px 2px 4px darkslategrey;
+}
+.dotsRow .dot.last {
+    background-color: indianred !important;
+}
