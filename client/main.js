@@ -4,16 +4,13 @@ import { mount } from 'react-mounter';
 
 import Index from '../imports/ui/containers/Index.js';
 import Game from '../imports/ui/containers/Game.js';
-
+import '../imports/startup/accounts-config.js';
 
 /* Create session if not exist */
-if (localStorage.getItem('user_type') === null) {
+if (localStorage.getItem('guest_id') === null) {
     let id = Date.now().toString();
     localStorage.setItem('guest_id', id);
-    localStorage.setItem('user_type', 'guest');
-    localStorage.setItem('user_name', 'guest' + id);
 }
-console.log(localStorage.getItem('guest_id'));
 
 /* INDEX */
 FlowRouter.route('/', {

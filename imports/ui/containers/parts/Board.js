@@ -18,7 +18,6 @@ export default class Board extends Component {
         let row = 0;
         let dots = [];
 
-        // console.log(this.props.dots);
         for (row; row < this.props.size; row++) {
             let colDots = [];
             let col = 0;

@@ -2,53 +2,28 @@ import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
 import { Boards } from '../../api/boards.js';
 import { FlowRouter } from 'meteor/kadira:flow-router';
+import AccountsUIWrapper from '../AccountsUIWrapper.js';
+import { Meteor } from 'meteor/meteor';
 
 export default class App extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
 
-        // Find the text field via the React ref
         const name = ReactDOM.findDOMNode(this.refs.gameName).value.trim();
         const size = ReactDOM.findDOMNode(this.refs.gameSize).value.trim();
-
-        let user_id = null;
-        if (localStorage.getItem('user_type') === 'guest') {
-            user_id = localStorage.getItem('guest_id');
-        }
-
-        let board_id = Boards.insert({
-            size: size,
+        const game = {
+            size: parseInt(size),
             game: name,
-            dots: this.dotsGeneration(size),
-            whiteIsNext: true,
-            authorType: localStorage.getItem('user_type'),
-            authorId: user_id,
-            authorUsername: localStorage.getItem('user_name'),
-            opponentType: null,
-            opponentId: null,
-            opponentUsername: null,
-            createdAt: new Date(),
-        });
-        // // Clear form
-        // ReactDOM.findDOMNode(this.refs.gameName).value = '';
-        FlowRouter.go('game.show', {_id: board_id});
-    }
-
-    dotsGeneration(size) {
-        let dots = [];
-        let rows = 0;
-        let id = 0;
-
-        for(rows; rows < size; rows++) {
-            let cols = 0;
-            let dotsRow = [];
-            for (cols; cols < size; cols++) {
-                dotsRow.push({id: id++, state: null});
+            guest_id: localStorage.getItem('guest_id')
+        };
+        Meteor.call('boards.insert', game, function(error, result) {
+            if (error) {
+                alert('Votre partie n\'a pas pu être créée');
+            } else {
+                FlowRouter.go('game.show', {_id: result});
             }
-            dots.push(dotsRow);
-        }
-        return dots;
+        });
     }
 
     render() {
@@ -56,23 +31,31 @@ export default class App extends Component {
             <div className="container">
                 <header>
                     <h1>Power5</h1>
+                    <AccountsUIWrapper />
                 </header>
-                <div className="game">
-                    <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-                        <input
-                            type="text"
-                            ref="gameName"
-                            placeholder="GameName"
-                        /><br />
-                        <input
-                            type="number"
-                            min="6"
-                            max="20"
-                            ref="gameSize"
-                            placeholder="GameName"
-                        />
-                        <input type="submit"/>
-                    </form>
+                <div className="content">
+                    <div id="newGameBlock">
+                        <h2>Créer une nouvelle partie</h2>
+                        <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
+                            <span>Nom de la partie : </span>
+                            <input
+                                type="text"
+                                ref="gameName"
+                                defaultValue="My game"
+                                placeholder="GameName"
+                            /><br />
+                            <span>Taille du plateau : </span>
+                            <input
+                                type="number"
+                                min="6"
+                                max="20"
+                                ref="gameSize"
+                                defaultValue="15"
+                                placeholder="Game size"
+                            /><br />
+                            <input type="submit"/>
+                        </form>
+                    </div>
                 </div>
             </div>
         );
