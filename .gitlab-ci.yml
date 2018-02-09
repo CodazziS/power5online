@@ -16,5 +16,5 @@ build_linux:
   artifacts:
     name: power5online.tar.gz
     paths:
-        - /tmp/power5/power5online.tar.gz
+        - /tmp/power5/
     expire_in: 50 weeks
