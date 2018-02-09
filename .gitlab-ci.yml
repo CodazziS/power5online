@@ -1,0 +1,20 @@
+before_script:
+  - npm -v
+  - meteor --version
+  - whoami
+  - rm -rf /tmp/power5
+
+#tests:
+#  script:
+
+build_linux:
+  tags:
+    - meteor
+  stage: build
+  script:
+    - meteor build /tmp/power5 --architecture os.linux.x86_64
+  artifacts:
+    name: power5online.tar.gz
+    paths:
+        - /tmp/power5/power5online.tar.gz
+    expire_in: 50 weeks
