@@ -3,6 +3,7 @@ before_script:
   - meteor --version
   - whoami
   - rm -rf /tmp/power5
+  - meteor update
 
 #tests:
 #  script:
