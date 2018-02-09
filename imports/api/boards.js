@@ -26,11 +26,15 @@ Meteor.methods({
         let user_name = null;
         let user_type = null;
 
+        let opponentType = null;
+        let opponentId = null;
+        let opponentUsername = null;
+
         check(game.size, Number);
         check(game.game, String);
 
-        if (game.size < 6 || game.size > 20) {
-            return null;
+        if (game.size < 6 || game.size > 30) {
+            throw new Meteor.Error('bad-size');
         }
 
         if (Meteor.user()) {
@@ -43,22 +47,37 @@ Meteor.methods({
             user_name = 'guest_' + user_id;
             user_type = 'guest';
         }
+
+        if (game.opponent) {
+            let opponent = Meteor.users.findOne({username: { $regex: new RegExp("^" + game.opponent, "i") }});
+            if (opponent) {
+                opponentType = 'meteor';
+                opponentId = opponent._id;
+                opponentUsername = opponent.username;
+            } else {
+                throw new Meteor.Error('player-not-found');
+            }
+        }
+
         return Boards.insert({
             size: game.size,
             game: game.game,
             dots: dotsGeneration(game.size),
             whiteIsNext: true,
-            creatorIsWhite: true,
+            creatorIsWhite: (Math.floor(Math.random() * Math.floor(2)) === 1),
             authorType: user_type,
             authorId: user_id,
             authorUsername: user_name,
-            opponentType: null,
-            opponentId: null,
-            opponentUsername: null,
+            authorReplay: false,
+            opponentType: opponentType,
+            opponentId: opponentId,
+            opponentUsername: opponentUsername,
+            opponentReplay: false,
             createdAt: new Date(),
             end: false,
             winnerIsAuthor: false,
-            draw: false
+            draw: false,
+            replay_id: null
         });
     },
 
@@ -84,9 +103,94 @@ Meteor.methods({
                 opponentType: user_type,
                 opponentId: user_id,
                 opponentUsername: user_name,
-                creatorIsWhite: (Math.floor(Math.random() * Math.floor(2)) === 1),
             },
         });
+    },
+
+    'boards.replay'(gameId, guest) {
+        const board = Boards.findOne(gameId);
+        let user_id = null;
+
+        if (Meteor.user()) {
+            user_id = Meteor.user()._id;
+        } else {
+            check(guest, String);
+            user_id = guest;
+        }
+        if (!board.end) {
+            return;
+        }
+        if ((board.authorId === user_id || board.authorId === guest) && !board.authorReplay && !board.replay_id) {
+            board.authorReplay = true;
+            Boards.update(gameId, {
+                $set: {
+                    authorReplay: true,
+                },
+            });
+        }
+        if ((board.opponentId === user_id || board.opponentId === guest) && !board.opponentReplay && !board.replay_id) {
+            board.opponentReplay = true;
+            Boards.update(gameId, {
+                $set: {
+                    opponentReplay: true,
+                },
+            });
+        }
+
+        if (board.authorReplay && board.opponentReplay && !board.replay_id) {
+            newId = Boards.insert({
+                size: board.size,
+                game: board.game,
+                dots: dotsGeneration(board.size),
+                whiteIsNext: true,
+                creatorIsWhite: (Math.floor(Math.random() * Math.floor(2)) === 1),
+                authorType: board.authorType,
+                authorId: board.authorId,
+                authorUsername: board.authorUsername,
+                authorReplay: false,
+                opponentType: board.opponentType,
+                opponentId: board.opponentId,
+                opponentUsername: board.opponentUsername,
+                opponentReplay: false,
+                createdAt: new Date(),
+                end: false,
+                winnerIsAuthor: false,
+                draw: false,
+                replay_id: null
+            });
+            Boards.update(gameId, {
+                $set: {
+                    replay_id: newId,
+                },
+            });
+        }
+    },
+
+    'boards.replayAccepted'(gameId, guest) {
+        const board = Boards.findOne(gameId);
+        let user_id = null;
+
+        if (Meteor.user()) {
+            user_id = Meteor.user()._id;
+        } else {
+            check(guest, String);
+            user_id = guest;
+        }
+
+        if ((board.authorId === user_id || board.authorId === guest) && !board.authorReplay && board.replay_id) {
+            Boards.update(gameId, {
+                $set: {
+                    authorReplay: null,
+                },
+            });
+        }
+        if ((board.opponentId === user_id || board.opponentId === guest) && !board.opponentReplay && board.replay_id) {
+            Boards.update(gameId, {
+                $set: {
+                    opponentReplay: null,
+                },
+            });
+        }
     },
 
     'boards.addDot'(gameId, row, col, guest) {
@@ -123,18 +227,24 @@ Meteor.methods({
             },
         });
 
-        const winner = checkWinner(dots, board.size);
-        let winnerId = null;
-        if (winner) {
-            if (winner === "white") {
-                winnerId = board.creatorIsWhite === true;
-            } else {
-                winnerId = board.creatorIsWhite === false;
-            }
+        const checkWin = checkWinner(dots, board.size);
+        if (checkWin) {
+            let winner = checkWin.winner;
+            let winnerIsAuthor = null;
+            let winDots = checkWin.dots;
+
+            winnerIsAuthor = (winner === "white") ? (board.creatorIsWhite === true) : (board.creatorIsWhite === false);
+            dots[winDots[0][0]][winDots[0][1]].win = true;
+            dots[winDots[1][0]][winDots[1][1]].win = true;
+            dots[winDots[2][0]][winDots[2][1]].win = true;
+            dots[winDots[3][0]][winDots[3][1]].win = true;
+            dots[winDots[4][0]][winDots[4][1]].win = true;
+
             Boards.update(gameId, {
                 $set: {
+                    dots: dots,
                     end: true,
-                    winnerIsAuthor: winnerId,
+                    winnerIsAuthor: winnerIsAuthor,
                     draw: false
                 },
             });
@@ -151,7 +261,7 @@ function dotsGeneration(size) {
         let cols = 0;
         let dotsRow = [];
         for (cols; cols < size; cols++) {
-            dotsRow.push({id: id++, state: null});
+            dotsRow.push({id: id++, state: null, win: false});
         }
         dots.push(dotsRow);
     }
@@ -160,9 +270,6 @@ function dotsGeneration(size) {
 
 function checkWinner(dots, size) {
     let rows = 0;
-    // let size = this.props.boards[0].size;
-
-    // console.log(this.props.boards[0]);
 
     for(rows; rows < size; rows++) {
         let cols = 0;
@@ -175,7 +282,10 @@ function checkWinner(dots, size) {
                     dots[rows][cols + 2].state === val &&
                     dots[rows][cols + 3].state === val &&
                     dots[rows][cols + 4].state === val) {
-                    return val;
+                    return {
+                        winner: val,
+                        dots: [[rows, cols], [rows, cols+1], [rows, cols+2], [rows, cols+3], [rows, cols+4]]
+                    };
                 }
                 /* 5 vertical */
                 if (dots[rows + 4] !== undefined &&
@@ -183,7 +293,10 @@ function checkWinner(dots, size) {
                     dots[rows + 2][cols].state === val &&
                     dots[rows + 3][cols].state === val &&
                     dots[rows + 4][cols].state === val) {
-                    return val;
+                    return {
+                        winner: val,
+                        dots: [[rows, cols], [rows+1, cols], [rows+2, cols], [rows+3, cols], [rows+4, cols]]
+                    };
                 }
 
                 /* 5 oblige right */
@@ -192,7 +305,10 @@ function checkWinner(dots, size) {
                     dots[rows + 2][cols + 2].state === val &&
                     dots[rows + 3][cols + 3].state === val &&
                     dots[rows + 4][cols + 4].state === val) {
-                    return val;
+                    return {
+                        winner: val,
+                        dots: [[rows, cols], [rows+1, cols+1], [rows+2, cols+2], [rows+3, cols+3], [rows+4, cols+4]]
+                    };
                 }
 
                 /* 5 oblique left */
@@ -201,7 +317,10 @@ function checkWinner(dots, size) {
                     dots[rows + 2][cols - 2].state === val &&
                     dots[rows + 3][cols - 3].state === val &&
                     dots[rows + 4][cols - 4].state === val) {
-                    return val;
+                    return {
+                        winner: val,
+                        dots: [[rows, cols], [rows+1, cols-1], [rows+2, cols-2], [rows+3, cols-3], [rows+4, cols-4]]
+                    };
                 }
             }
         }

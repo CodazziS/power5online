@@ -6,6 +6,7 @@ import AccountsUIWrapper from '../AccountsUIWrapper.js';
 
 import { Boards } from '../../api/boards.js';
 import {Meteor} from "meteor/meteor";
+import {check} from "meteor/check";
 
 class Game extends Component {
 
@@ -20,79 +21,8 @@ class Game extends Component {
         return (this.props.boards && this.props.boards[0]);
     }
 
-    // checkWinner(dots) {
-    //     let rows = 0;
-    //     let size = this.props.boards[0].size;
-    //
-    //     // console.log(this.props.boards[0]);
-    //
-    //     for(rows; rows < size; rows++) {
-    //         let cols = 0;
-    //         for (cols; cols < size; cols++) {
-    //             let val = dots[rows][cols].state;
-    //             if (val !== null) {
-    //                 /* 5 horizontal */
-    //                 if (dots[rows][cols + 4] !== undefined &&
-    //                     dots[rows][cols + 1].state === val &&
-    //                     dots[rows][cols + 2].state === val &&
-    //                     dots[rows][cols + 3].state === val &&
-    //                     dots[rows][cols + 4].state === val) {
-    //                     return val;
-    //                 }
-    //                 /* 5 vertical */
-    //                 if (dots[rows + 4] !== undefined &&
-    //                     dots[rows + 1][cols].state === val &&
-    //                     dots[rows + 2][cols].state === val &&
-    //                     dots[rows + 3][cols].state === val &&
-    //                     dots[rows + 4][cols].state === val) {
-    //                     return val;
-    //                 }
-    //
-    //                 /* 5 oblige right */
-    //                 if (dots[rows + 4] !== undefined && dots[rows + 4][cols + 4] !== undefined &&
-    //                     dots[rows + 1][cols + 1].state === val &&
-    //                     dots[rows + 2][cols + 2].state === val &&
-    //                     dots[rows + 3][cols + 3].state === val &&
-    //                     dots[rows + 4][cols + 4].state === val) {
-    //                     return val;
-    //                 }
-    //
-    //                 /* 5 oblique left */
-    //                 if (dots[rows + 4] !== undefined && dots[rows + 4][cols - 4] !== undefined &&
-    //                     dots[rows + 1][cols - 1].state === val &&
-    //                     dots[rows + 2][cols - 2].state === val &&
-    //                     dots[rows + 3][cols - 3].state === val &&
-    //                     dots[rows + 4][cols - 4].state === val) {
-    //                     return val;
-    //                 }
-    //             }
-    //         }
-    //     }
-    //     return false;
-    // }
-
     handleClick(rowcol) {
-        // const board = this.props.boards[0];
-        // const dots = board.dots;
-        // if (dots[rowcol[0]][rowcol[1]].state || this.checkWinner(dots)) {
-        //     return;
-        // }
-
-        // if ((board.whiteIsNext && this.getPlayerType() !== 1) ||
-        //     (!board.whiteIsNext && this.getPlayerType() !== 2)) {
-        //     return;
-        // }
-        // dots[rowcol[0]][rowcol[1]].state = board.whiteIsNext ? "white" : "black";
-
-        /* UPDATE */
         Meteor.call('boards.addDot', this.props.boards[0]._id, rowcol[0], rowcol[1], localStorage.getItem('guest_id'));
-        // Boards.update(this.props.boards[0]._id, {
-        //     $set: {
-        //         dots: dots,
-        //         whiteIsNext: !board.whiteIsNext,
-        //         last: rowcol[0] + '-' + rowcol[1]
-        //     },
-        // });
     }
 
     getPlayerType() {
@@ -128,19 +58,6 @@ class Game extends Component {
 
         const current = this.props.boards[0];
         if (current.opponentType === null) {
-            // let user_id = null;
-            // let user_name = null;
-            // let user_type = null;
-            // if (Meteor.user()) {
-            //     user_id = Meteor.user()._id;
-            //     user_name = Meteor.user().username;
-            //     user_type = 'meteor';
-            // } else {
-            //     user_id = localStorage.getItem('guest_id');
-            //     user_name = 'guest_' + user_id;
-            //     user_type = 'guest';
-            // }
-
             Meteor.call('boards.setOpponent', this.props.boards[0]._id, localStorage.getItem('guest_id'), function(error, result) {
                 if (error) {
                     alert('Vous ne pouvez pas rejoindre la partie');
@@ -148,16 +65,48 @@ class Game extends Component {
                     this.allowed = true;
                 }
             });
-            // Boards.update(this.props.boards[0]._id, {
-            //     $set: {
-            //         opponentType: user_type,
-            //         opponentId: user_id,
-            //         opponentUsername: user_name,
-            //     },
-            // });
         }
 
         return this.allowed;
+    }
+
+    changeFavicon(src) {
+        document.head.removeChild(document.getElementById('favicon'));
+        document.head.removeChild(document.getElementById('faviconpng'));
+        let link = document.createElement('link');
+        let linkpng = document.createElement('link');
+        link.id = 'favicon';
+        link.rel = 'icon';
+        link.href = src + '.ico';
+        linkpng.id = 'faviconpng';
+        linkpng.rel = 'icon';
+        linkpng.href = src + '.png';
+        document.head.appendChild(link);
+        document.head.appendChild(linkpng);
+    }
+
+    replay() {
+        Meteor.call('boards.replay', this.props.boards[0]._id, localStorage.getItem('guest_id'));
+    }
+
+    checkReplay(board) {
+        let user_id = null;
+        let guest = localStorage.getItem('guest_id');
+
+        if (board.replay_id) {
+            if (Meteor.user()) {
+                user_id = Meteor.user()._id;
+            } else {
+                check(guest, String);
+                user_id = guest;
+            }
+
+            if ((board.authorReplay && (board.authorId === guest || board.authorId === user_id)) ||
+                (board.opponentReplay && (board.opponentId === guest || board.opponentId === user_id))){
+                Meteor.call('boards.replayAccepted', this.props.boards[0]._id, localStorage.getItem('guest_id'));
+                FlowRouter.go('game.show', {_id: board.replay_id});
+            }
+        }
     }
 
     render() {
@@ -175,14 +124,13 @@ class Game extends Component {
         }
 
         const current = this.props.boards[0];
-        // const winner = this.checkWinner(current.dots);
-        //
-        // let status;
-        // if (winner) {
-        //     status = "Winner: " + winner;
-        // } else {
-        //     status = "Next player: " + (current.whiteIsNext ? "White" : "Black");
-        // }
+
+        if (!current.end) {
+            this.changeFavicon((current.whiteIsNext ? '/favicon-w' : '/favicon-b'));
+        } else {
+            this.changeFavicon('/favicon');
+            this.checkReplay(current);
+        }
 
         return (
             <div className="container">
@@ -197,7 +145,10 @@ class Game extends Component {
                                 <div className={(current.whiteIsNext && !current.end) ? "scoreboardPlayerActive" : "scoreboardPlayerNotActive"}>
                                     <div className="scoreboardPlayerWhite"></div>
                                 </div>
-                                <div className="scoreboardPlayerName">{(current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}</div>
+                                <div className="scoreboardPlayerName">
+                                    <span className={(current.end && ((current.winnerIsAuthor && current.creatorIsWhite) || (!current.winnerIsAuthor && !current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
+                                    {(current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}
+                                </div>
                             </div>
 
                             <hr className="scoreboardSeparator"></hr>
@@ -208,10 +159,14 @@ class Game extends Component {
                                 <div className={(!current.whiteIsNext && !current.end)? "scoreboardPlayerActive" : "scoreboardPlayerNotActive"}>
                                     <div className="scoreboardPlayerBlack"></div>
                                 </div>
-                                <div className="scoreboardPlayerName">{(!current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}</div>
+                                <div className="scoreboardPlayerName">
+                                    <span className={(current.end && ((current.winnerIsAuthor && !current.creatorIsWhite) || (!current.winnerIsAuthor && current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
+                                    {(!current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}
+                                    </div>
                             </div>
-                            {/*<div className="scoreboardStatus">{status}</div>*/}
                             <button onClick={function(){document.location.href="/"}}>Accueil</button>
+                            <button onClick={current => this.replay(current)}>Rejouer</button>
+
                         </div>
                     </div>
                     <div id="gameBoard" className="game-board">

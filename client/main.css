@@ -75,11 +75,24 @@ input[type=text]:focus, input[type=number]:focus {
     align-items: flex-start;
     flex-wrap: wrap;
 }
-#newGameBlock {
-    /*width: 250px;*/
+#newGameBlock, #gamesLaunched, #gamesStats, #lastGames {
+    width: 350px;
     background-color: white;
     box-shadow: 2px 2px 8px black;
     padding: 20px;
+    margin-bottom: 20px;
+}
+#gamesLaunched table, #lastGames table {
+    width: 100%;
+}
+#gamesStats table {
+    width: 100%;
+    font-size: 24px;
+    text-align: left;
+}
+#gamesStats td {
+    font-size: 36px;
+    text-align: right;
 }
 .gameContainer {
     height: 90vh;
@@ -158,6 +171,9 @@ input[type=text]:focus, input[type=number]:focus {
 .dotsRow .dot.last {
     background-color: indianred !important;
 }
+.dotsRow .dot.win {
+    background-color: greenyellow !important;
+}
 
 #gameScore {
     background-color: white;
@@ -219,4 +235,16 @@ input[type=text]:focus, input[type=number]:focus {
 .scoreboardPlayerWhite {
     background-color: white;
     box-shadow: 2px 2px 4px darkslategrey;
+}
+.winnerTrophy:after {
+    content: '\01F3C6';
+    font-size: 24px;
+}
+.loserTrophy:after {
+    content: '\0274C';
+    font-size: 24px;
+}
+.drawTrophy:after {
+    content: '\1F3F3';
+    font-size: 24px;
 }
