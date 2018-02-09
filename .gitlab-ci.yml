@@ -4,6 +4,7 @@ before_script:
   - whoami
   - rm -rf /tmp/power5
   - meteor update
+  - npm install
 
 #tests:
 #  script:
