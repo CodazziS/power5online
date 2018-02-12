@@ -165,7 +165,7 @@ class Game extends Component {
                                     </div>
                             </div>
                             <button onClick={function(){document.location.href="/"}}>Accueil</button>
-                            <button onClick={current => this.replay(current)}>Rejouer</button>
+                            <button onClick={(current) => this.replay(current)}>Rejouer</button>
 
                         </div>
                     </div>

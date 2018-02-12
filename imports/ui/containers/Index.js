@@ -21,7 +21,7 @@ class App extends Component {
         const game = {
             size: parseInt(size),
             game: name,
-            guest_id: localStorage.getItem('guest_id'),
+            guestId: localStorage.getItem('guest_id'),
             opponent: opponent
         };
         Meteor.call('boards.insert', game, function(error, result) {

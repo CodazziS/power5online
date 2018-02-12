@@ -3,24 +3,24 @@ import {Meteor} from "meteor/meteor";
 
 export default class LastGame extends Component {
     render() {
-        let user_id = localStorage.getItem('guest_id');
+        let userId = localStorage.getItem('guest_id');
         let result = 'drawTrophy';
         let opponent = null;
         const game = this.props.game;
 
         if (Meteor.user()) {
-            user_id = Meteor.user()._id;
+            userId = Meteor.user()._id;
         }
 
-        if (game.authorId === user_id && game.winnerIsAuthor ||
-            game.opponentId === user_id && !game.winnerIsAuthor) {
+        if (game.authorId === userId && game.winnerIsAuthor ||
+            game.opponentId === userId && !game.winnerIsAuthor) {
             result = 'winnerTrophy';
-        } else if (game.authorId === user_id && !game.winnerIsAuthor ||
-            game.opponentId === user_id && game.winnerIsAuthor) {
+        } else if (game.authorId === userId && !game.winnerIsAuthor ||
+            game.opponentId === userId && game.winnerIsAuthor) {
             result = 'loserTrophy';
         }
 
-        if (game.authorId === user_id) {
+        if (game.authorId === userId) {
             opponent = game.opponentUsername;
         } else {
             opponent = game.authorUsername;
