@@ -168,11 +168,11 @@ input[type=text]:focus, input[type=number]:focus {
     box-shadow: 2px 2px 4px darkslategrey;
     transition: top 0.75s, left 1s ease;
 }
-.dotsRow .dot.last {
-    background-color: indianred !important;
+.dotsRow:nth-child(even) .dot.last, .dotsRow:nth-child(odd) .dot.last {
+    background-color: indianred;
 }
-.dotsRow .dot.win {
-    background-color: greenyellow !important;
+.dotsRow:nth-child(even) .dot.win, .dotsRow:nth-child(odd) .dot.win {
+    background-color: greenyellow;
 }
 
 #gameScore {

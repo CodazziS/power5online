@@ -47,7 +47,6 @@ Meteor.methods({
             user_name = 'guest_' + user_id;
             user_type = 'guest';
         }
-
         if (game.opponent) {
             let opponent = Meteor.users.findOne({username: { $regex: new RegExp("^" + game.opponent, "i") }});
             if (opponent) {
