@@ -165,7 +165,7 @@ class Game extends Component {
         document.title = current.game;
 
         if (this.isMyTurn()) {
-            document.title = "A vous !";
+            document.title = 'A vous !';
         }
         if (!current.end) {
             this.changeFavicon((current.whiteIsNext ? '/favicon-w' : '/favicon-b'));
@@ -209,6 +209,13 @@ class Game extends Component {
                             <ToggleButton
                                 check={current.private}
                                 onClick={() => this.switchPrivate()}
+                            />
+                            <span>Lien visiteur : </span>
+                            <input
+                                type="text"
+                                className="disableInput"
+                                defaultValue={document.location.host + '/visitor/' + current._id}
+                                disabled
                             />
                             <button onClick={function(){document.location.href='/'}}>Accueil</button>
                             <button onClick={(current) => this.replay(current)}>Rejouer</button>
