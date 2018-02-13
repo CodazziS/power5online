@@ -52,7 +52,7 @@ class App extends Component {
     }
 
     getLastGames() {
-        if (this.props.lastGames !== undefined && this.props.lastGames.length > 0 ) {
+        if (typeof this.props.lastGames !== 'undefined' && this.props.lastGames.length > 0 ) {
             return this.props.lastGames;
         } else {
             return [];
@@ -153,9 +153,9 @@ class App extends Component {
 
 export default withTracker(() => {
     Meteor.subscribe('boards', localStorage.getItem('guest_id'));
-    let user_id = localStorage.getItem('guest_id');
+    let userId = localStorage.getItem('guest_id');
     if (Meteor.user()) {
-        user_id = Meteor.user()._id;
+        userId = Meteor.user()._id;
     }
     return {
         launchGames: Boards.find({end: false}, {sort:{createdAt: -1}}).fetch(),
@@ -164,24 +164,24 @@ export default withTracker(() => {
             $and: [
                 {end: true},
                 {$or: [
-                    {$and: [{authorId: user_id}, {winnerIsAuthor: true}]},
-                    {$and: [{opponentId: user_id}, {winnerIsAuthor: false}]}
+                    {$and: [{authorId: userId}, {winnerIsAuthor: true}]},
+                    {$and: [{opponentId: userId}, {winnerIsAuthor: false}]}
                 ]}
             ]}).count(),
         loseGames: Boards.find({
             $and: [
                 {end: true},
                 {$or: [
-                        {$and: [{authorId: user_id}, {winnerIsAuthor: false}]},
-                        {$and: [{opponentId: user_id}, {winnerIsAuthor: true}]}
+                        {$and: [{authorId: userId}, {winnerIsAuthor: false}]},
+                        {$and: [{opponentId: userId}, {winnerIsAuthor: true}]}
                     ]}
             ]}).count(),
         drawGames: Boards.find({
             $and: [
                 {end: true},
                 {$or: [
-                        {$and: [{authorId: user_id}, {draw: true}]},
-                        {$and: [{opponentId: user_id}, {draw: true}]}
+                        {$and: [{authorId: userId}, {draw: true}]},
+                        {$and: [{opponentId: userId}, {draw: true}]}
                     ]}
             ]}).count(),
     };

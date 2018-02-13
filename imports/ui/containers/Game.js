@@ -28,20 +28,20 @@ class Game extends Component {
     getPlayerType() {
         const current = this.props.boards[0];
 
-        let user_id = null;
+        let userId = null;
 
         if (Meteor.user()) {
-            user_id = Meteor.user()._id;
+            userId = Meteor.user()._id;
         } else {
-            user_id = localStorage.getItem('guest_id');
+            userId = localStorage.getItem('guest_id');
         }
 
         if ((current.authorType === 'guest' && current.authorId === localStorage.getItem('guest_id')) ||
-            (current.authorType === 'meteor' && current.authorId === user_id)) {
+            (current.authorType === 'meteor' && current.authorId === userId)) {
             return 1;
         }
         if ((current.opponentType === 'guest' && current.opponentId === localStorage.getItem('guest_id')) ||
-            (current.opponentType === 'meteor' && current.opponentId === user_id)) {
+            (current.opponentType === 'meteor' && current.opponentId === userId)) {
             return 2;
         }
         return null;
@@ -90,21 +90,21 @@ class Game extends Component {
     }
 
     checkReplay(board) {
-        let user_id = null;
+        let userId = null;
         let guest = localStorage.getItem('guest_id');
 
-        if (board.replay_id) {
+        if (board.replayId) {
             if (Meteor.user()) {
-                user_id = Meteor.user()._id;
+                userId = Meteor.user()._id;
             } else {
                 check(guest, String);
-                user_id = guest;
+                userId = guest;
             }
 
-            if ((board.authorReplay && (board.authorId === guest || board.authorId === user_id)) ||
-                (board.opponentReplay && (board.opponentId === guest || board.opponentId === user_id))){
+            if ((board.authorReplay && (board.authorId === guest || board.authorId === userId)) ||
+                (board.opponentReplay && (board.opponentId === guest || board.opponentId === userId))){
                 Meteor.call('boards.replayAccepted', this.props.boards[0]._id, localStorage.getItem('guest_id'));
-                FlowRouter.go('game.show', {_id: board.replay_id});
+                FlowRouter.go('game.show', {_id: board.replayId});
             }
         }
     }
@@ -142,7 +142,7 @@ class Game extends Component {
                     <div id="gameScore">
                         <div className="scoreboard">
                             <div className="scoreboardPlayer">
-                                <div className={(current.whiteIsNext && !current.end) ? "scoreboardPlayerActive" : "scoreboardPlayerNotActive"}>
+                                <div className={(current.whiteIsNext && !current.end) ? 'scoreboardPlayerActive' : 'scoreboardPlayerNotActive'}>
                                     <div className="scoreboardPlayerWhite"></div>
                                 </div>
                                 <div className="scoreboardPlayerName">
@@ -152,7 +152,7 @@ class Game extends Component {
                             </div>
 
                             <hr className="scoreboardSeparator"></hr>
-                            <span className="scoreboardSeparatorText">{" VS "}</span>
+                            <span className="scoreboardSeparatorText">{' VS '}</span>
                             <hr className="scoreboardSeparator"></hr>
 
                             <div className="scoreboardPlayer">
@@ -164,7 +164,7 @@ class Game extends Component {
                                     {(!current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}
                                     </div>
                             </div>
-                            <button onClick={function(){document.location.href="/"}}>Accueil</button>
+                            <button onClick={function(){document.location.href='/'}}>Accueil</button>
                             <button onClick={(current) => this.replay(current)}>Rejouer</button>
 
                         </div>

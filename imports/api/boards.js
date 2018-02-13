@@ -6,13 +6,13 @@ export const Boards = new Mongo.Collection('boards');
 
 if (Meteor.isServer) {
     // This code only runs on the server
-    Meteor.publish('boards', function boardPublication(guest_id) {
+    Meteor.publish('boards', function boardPublication(guestId) {
         return Boards.find({
             $or: [
                 { authorId: this.userId },
                 { opponentId: this.userId },
-                { authorId: guest_id },
-                { opponentId: guest_id },
+                { authorId: guestId },
+                { opponentId: guestId },
                 { opponentId: null },
             ],
         });
@@ -62,7 +62,7 @@ function checkWinner(dots, size) {
             let val = dots[rows][cols].state;
             if (val !== null) {
                 /* 5 horizontal */
-                if (dots[rows][cols + 4] !== undefined &&
+                if (typeof dots[rows][cols + 4] !== 'undefined' &&
                     dots[rows][cols + 1].state === val &&
                     dots[rows][cols + 2].state === val &&
                     dots[rows][cols + 3].state === val &&
@@ -151,15 +151,15 @@ Meteor.methods({
             authorId: currentUser.userId,
             authorUsername: currentUser.userName,
             authorReplay: false,
-            opponentType: opponentType,
-            opponentId: opponentId,
-            opponentUsername: opponentUsername,
+            opponentType,
+            opponentId,
+            opponentUsername,
             opponentReplay: false,
             createdAt: new Date(),
             end: false,
             winnerIsAuthor: false,
             draw: false,
-            replay_id: null
+            replayId: null
         });
     },
 
@@ -184,7 +184,7 @@ Meteor.methods({
             return;
         }
         if ((board.authorId === currentUser.userId || board.authorId === guest) &&
-            !board.authorReplay && !board.replay_id) {
+            !board.authorReplay && !board.replayId) {
             board.authorReplay = true;
             Boards.update(gameId, {
                 $set: {
@@ -193,7 +193,7 @@ Meteor.methods({
             });
         }
         if ((board.opponentId === currentUser.userId || board.opponentId === guest) &&
-            !board.opponentReplay && !board.replay_id) {
+            !board.opponentReplay && !board.replayId) {
             board.opponentReplay = true;
             Boards.update(gameId, {
                 $set: {
@@ -202,7 +202,7 @@ Meteor.methods({
             });
         }
 
-        if (board.authorReplay && board.opponentReplay && !board.replay_id) {
+        if (board.authorReplay && board.opponentReplay && !board.replayId) {
             const newId = Boards.insert({
                 size: board.size,
                 game: board.game,
@@ -221,11 +221,11 @@ Meteor.methods({
                 end: false,
                 winnerIsAuthor: false,
                 draw: false,
-                replay_id: null
+                replayId: null
             });
             Boards.update(gameId, {
                 $set: {
-                    replay_id: newId,
+                    replayId: newId,
                 },
             });
         }
@@ -236,7 +236,7 @@ Meteor.methods({
         const currentUser = getCurrentUser(guest);
 
         if ((board.authorId === currentUser.userId || board.authorId === guest) &&
-            !board.authorReplay && board.replay_id) {
+            !board.authorReplay && board.replayId) {
             Boards.update(gameId, {
                 $set: {
                     authorReplay: null,
@@ -244,7 +244,7 @@ Meteor.methods({
             });
         }
         if ((board.opponentId === currentUser.userId || board.opponentId === guest) &&
-            !board.opponentReplay && board.replay_id) {
+            !board.opponentReplay && board.replayId) {
             Boards.update(gameId, {
                 $set: {
                     opponentReplay: null,
