@@ -14,6 +14,7 @@ if (Meteor.isServer) {
                 { authorId: guestId },
                 { opponentId: guestId },
                 { opponentId: null },
+                { private: false },
             ],
         });
     });
@@ -51,6 +52,14 @@ function getCurrentUser(guestId) {
         userType = 'guest';
     }
     return {userId: userId, userName: userName, userType: userType};
+}
+
+function checkUserEditAction(game, guestId) {
+    const user = getCurrentUser(guestId);
+    if (game.authorId === user.userId || game.opponentId === user.userId) {
+        return;
+    }
+    throw new Meteor.Error('user-not-allowed');
 }
 
 function checkWinner(dots, size) {
@@ -159,14 +168,19 @@ Meteor.methods({
             end: false,
             winnerIsAuthor: false,
             draw: false,
-            replayId: null
+            replayId: null,
+            lastActionAt: null,
+            private: true
         });
     },
 
     'boards.setOpponent'(gameId, guest) {
         const currentUser = getCurrentUser(guest);
+        const board = Boards.findOne(gameId);
 
         check(gameId, String);
+        checkUserEditAction(board, guest);
+
         Boards.update(gameId, {
             $set: {
                 opponentType: currentUser.userType,
@@ -176,9 +190,24 @@ Meteor.methods({
         });
     },
 
+    'boards.switchPrivacy'(gameId, guest, privateGame) {
+        const board = Boards.findOne(gameId);
+
+        check(gameId, String);
+        checkUserEditAction(board, guest);
+
+        Boards.update(gameId, {
+            $set: {
+                private: privateGame
+            },
+        });
+    },
+
     'boards.replay'(gameId, guest) {
         const board = Boards.findOne(gameId);
         const currentUser = getCurrentUser(guest);
+
+        checkUserEditAction(board, guest);
 
         if (!board.end) {
             return;
@@ -235,6 +264,7 @@ Meteor.methods({
         const board = Boards.findOne(gameId);
         const currentUser = getCurrentUser(guest);
 
+        checkUserEditAction(board, guest);
         if ((board.authorId === currentUser.userId || board.authorId === guest) &&
             !board.authorReplay && board.replayId) {
             Boards.update(gameId, {
@@ -261,6 +291,8 @@ Meteor.methods({
         let dots = board.dots;
 
         check(gameId, String);
+        checkUserEditAction(board, guest);
+
         if (!board.opponentId || dots[row][col].state || board.end) {
             return;
         }

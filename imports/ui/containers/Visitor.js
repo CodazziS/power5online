@@ -8,7 +8,7 @@ import { Meteor } from "meteor/meteor";
 import Board from './parts/Board.js';
 import ToggleButton from './components/ToggleButton.js';
 
-class Game extends Component {
+class Visitor extends Component {
 
     constructor(props) {
         super(props);
@@ -19,27 +19,6 @@ class Game extends Component {
 
     loadBoard() {
         return (this.props.boards && this.props.boards[0]);
-    }
-
-    handleClick(rowcol) {
-        Meteor.call('boards.addDot', this.props.boards[0]._id, rowcol[0], rowcol[1], localStorage.getItem('guest_id'));
-    }
-
-    getCurrentUser(guestId) {
-        let userId = null;
-        let userName = null;
-        let userType = null;
-
-        if (Meteor.user()) {
-            userId = Meteor.user()._id;
-            userName = Meteor.user().username;
-            userType = 'meteor';
-        } else {
-            userId = guestId;
-            userName = 'guest_' + userId;
-            userType = 'guest';
-        }
-        return {userId, userName, userType};
     }
 
     getPlayerType() {
@@ -140,13 +119,8 @@ class Game extends Component {
         return false;
     }
 
-    switchPrivate() {
-        Meteor.call(
-            'boards.switchPrivacy',
-            this.props.boards[0]._id,
-            localStorage.getItem('guest_id'),
-            !this.props.boards[0].private
-        );
+    handleClick() {
+        return;
     }
 
     render() {
@@ -155,24 +129,8 @@ class Game extends Component {
                 <h1>Chargement du plateau ...</h1>
             );
         }
-        if (!this.isPlayerAllowed()) {
-            return (
-                <h1>Ce jeu est complet ...</h1>
-            );
-        }
-
         const current = this.props.boards[0];
         document.title = current.game;
-
-        if (this.isMyTurn()) {
-            document.title = "A vous !";
-        }
-        if (!current.end) {
-            this.changeFavicon((current.whiteIsNext ? '/favicon-w' : '/favicon-b'));
-        } else {
-            this.changeFavicon('/favicon');
-            this.checkReplay(current);
-        }
 
         return (
             <div className="container">
@@ -204,15 +162,8 @@ class Game extends Component {
                                 <div className="scoreboardPlayerName">
                                     <span className={(current.end && ((current.winnerIsAuthor && !current.creatorIsWhite) || (!current.winnerIsAuthor && current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
                                     {(!current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}
-                                    </div>
+                                </div>
                             </div>
-                            <ToggleButton
-                                check={current.private}
-                                onClick={() => this.switchPrivate()}
-                            />
-                            <button onClick={function(){document.location.href='/'}}>Accueil</button>
-                            <button onClick={(current) => this.replay(current)}>Rejouer</button>
-
                         </div>
                     </div>
                     <div id="gameBoard" className="game-board">
@@ -234,4 +185,4 @@ export default withTracker(() => {
     return {
         boards: Boards.find({_id: FlowRouter.getParam('_id')}).fetch(),
     };
-})(Game);
+})(Visitor);

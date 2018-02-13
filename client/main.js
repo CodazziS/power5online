@@ -4,6 +4,7 @@ import { mount } from 'react-mounter';
 
 import Index from '../imports/ui/containers/Index.js';
 import Game from '../imports/ui/containers/Game.js';
+import Visitor from '../imports/ui/containers/Visitor.js';
 import '../imports/startup/accounts-config.js';
 
 /* Create session if not exist */
@@ -35,6 +36,16 @@ FlowRouter.route('/game/:_id', {
     action() {
         mount(Game, {
             main: <Game/>,
+        });
+    },
+});
+
+/* Visitor */
+FlowRouter.route('/visitor/:_id', {
+    name: 'game.spec',
+    action() {
+        mount(Visitor, {
+            main: <Visitor/>,
         });
     },
 });
