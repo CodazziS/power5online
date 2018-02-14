@@ -4,7 +4,7 @@ import i18n from 'meteor/universe:i18n';
 export default class ToggleButton extends React.Component {
     render() {
         const T = i18n.createComponent();
-        console.log(this.props.check);
+
         return (
             <div className="toggleButton">
                 <label className="toggleButtonSwitch" onClick={this.props.onClick}>

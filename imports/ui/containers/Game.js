@@ -110,7 +110,6 @@ class Game extends Component {
 
     render() {
         const T = i18n.createComponent();
-        console.log(this.props);
 
         if (!this.props.board) {
             return (<Panel type='warn' text='GAME_LOADING' />);
@@ -130,6 +129,15 @@ class Game extends Component {
 
         if (this.isMyTurn()) {
             document.title = i18n.__('MY_ROUND');
+            // Push.create(i18n.__('APP_TITLE'), {
+            //     body: i18n.__('MY_ROUND_TXT'),
+            //     icon: '/favicon-b.png',
+            //     timeout: 6,
+            //     onClick: function () {
+            //         window.focus();
+            //         this.close();
+            //     }
+            // });
         }
         if (!current.end) {
             this.changeFavicon((current.whiteIsNext ? '/favicon-w' : '/favicon-b'));

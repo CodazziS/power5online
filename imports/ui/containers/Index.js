@@ -92,7 +92,7 @@ class App extends Component {
                             <input
                                 type="text"
                                 ref="gameName"
-                                defaultValue=""
+                                defaultValue={i18n.__('NEW_GAME_NAME_VALUE')}
                                 placeholder={i18n.__('NEW_GAME_NAME')}
                             /><br />
                             <strong><T>NEW_GAME_SIZE</T></strong>
