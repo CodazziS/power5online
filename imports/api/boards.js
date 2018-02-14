@@ -200,6 +200,7 @@ Meteor.methods({
                 opponentType: currentUser.userType,
                 opponentId: currentUser.userId,
                 opponentUsername: currentUser.userName,
+                lastActionAt: null
             },
         });
     },
@@ -320,7 +321,8 @@ Meteor.methods({
             $set: {
                 dots,
                 whiteIsNext: !board.whiteIsNext,
-                last: row + '-' + col
+                last: row + '-' + col,
+                lastActionAt: new Date(),
             },
         });
 

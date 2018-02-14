@@ -157,8 +157,8 @@ export default withTracker(() => {
         userId = Meteor.user()._id;
     }
     return {
-        launchGames: Boards.find({end: false}, {sort:{createdAt: -1}}).fetch(),
-        lastGames: Boards.find({end: true}, {sort:{createdAt: -1}, limit: 10}).fetch(),
+        launchGames: Boards.find({end: false}, {sort:{lastActionAt: -1, createdAt: -1}}).fetch(),
+        lastGames: Boards.find({end: true}, {sort:{lastActionAt: -1, createdAt: -1}, limit: 10}).fetch(),
         winGames: Boards.find({
             $and: [
                 {end: true},
