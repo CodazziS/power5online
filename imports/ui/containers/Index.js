@@ -164,9 +164,9 @@ export default withTracker(() => {
                 $and: [
                     {end: false},
                     {$or: [
-                            {$and: [{authorId: userId}, {winnerIsAuthor: true}]},
-                            {$and: [{opponentId: userId}, {winnerIsAuthor: false}]}
-                        ]}
+                        {authorId: userId},
+                        {opponentId: userId}
+                    ]}
             ]},
             {sort:{lastActionAt: -1, createdAt: -1}}
             ).fetch(),
@@ -176,8 +176,8 @@ export default withTracker(() => {
                 $and: [
                     {end: true},
                     {$or: [
-                        {$and: [{authorId: userId}, {winnerIsAuthor: true}]},
-                        {$and: [{opponentId: userId}, {winnerIsAuthor: false}]}
+                        {authorId: userId},
+                        {opponentId: userId}
                     ]}
             ]},
             {sort:{lastActionAt: -1, createdAt: -1}, limit: 10}
