@@ -160,12 +160,26 @@ export default withTracker(() => {
     }
     return {
         launchGames: Boards.find(
-            {end: false},
+            {
+                $and: [
+                    {end: false},
+                    {$or: [
+                            {$and: [{authorId: userId}, {winnerIsAuthor: true}]},
+                            {$and: [{opponentId: userId}, {winnerIsAuthor: false}]}
+                        ]}
+            ]},
             {sort:{lastActionAt: -1, createdAt: -1}}
             ).fetch(),
 
         lastGames: Boards.find(
-            {end: true},
+            {
+                $and: [
+                    {end: true},
+                    {$or: [
+                        {$and: [{authorId: userId}, {winnerIsAuthor: true}]},
+                        {$and: [{opponentId: userId}, {winnerIsAuthor: false}]}
+                    ]}
+            ]},
             {sort:{lastActionAt: -1, createdAt: -1}, limit: 10}
             ).fetch(),
 
