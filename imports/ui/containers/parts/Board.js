@@ -8,15 +8,15 @@ export default class Board extends Component {
 
         if (this.props.dots[row][col].win) {
             className = 'dot win';
-        } else if (row+"-"+col === this.props.last) {
+        } else if (row+'-'+col === this.props.last) {
             className = 'dot last';
         }
         return (
             <Dots
                 value={this.props.dots[row][col].state}
-                key={row+"-"+col}
+                key={row+'-'+col}
                 classname={className}
-                last={(row+"-"+col === this.props.last)}
+                last={(row+'-'+col === this.props.last)}
                 onClick={() => this.props.onClick([row, col])}
             />
         );
@@ -32,7 +32,7 @@ export default class Board extends Component {
             for (col; col < this.props.size; col++) {
                 colDots.push(this.renderDots(row, col));
             }
-            dots.push(<div className='dotsRow' key={"row-"+row}>{colDots}</div>);
+            dots.push(<div className='dotsRow' key={'row-'+row}>{colDots}</div>);
         }
         return (
             <div className={'gameContainer'}>

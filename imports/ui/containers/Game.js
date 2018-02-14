@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 
-import Board from './parts/Board.js';
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { withTracker } from 'meteor/react-meteor-data';
 import AccountsUIWrapper from '../AccountsUIWrapper.js';
-
 import { Boards } from '../../api/boards.js';
-import {Meteor} from "meteor/meteor";
-import {check} from "meteor/check";
+import { Meteor } from 'meteor/meteor';
+
+import Board from './parts/Board.js';
+import ToggleButton from './components/ToggleButton.js';
 
 class Game extends Component {
 
@@ -25,23 +26,33 @@ class Game extends Component {
         Meteor.call('boards.addDot', this.props.boards[0]._id, rowcol[0], rowcol[1], localStorage.getItem('guest_id'));
     }
 
-    getPlayerType() {
-        const current = this.props.boards[0];
-
-        let user_id = null;
+    getCurrentUser(guestId) {
+        let userId = null;
+        let userName = null;
+        let userType = null;
 
         if (Meteor.user()) {
-            user_id = Meteor.user()._id;
+            userId = Meteor.user()._id;
+            userName = Meteor.user().username;
+            userType = 'meteor';
         } else {
-            user_id = localStorage.getItem('guest_id');
+            userId = guestId;
+            userName = 'guest_' + userId;
+            userType = 'guest';
         }
+        return {userId, userName, userType};
+    }
+
+    getPlayerType() {
+        const current = this.props.boards[0];
+        let userId = this.getCurrentUser().userId;
 
         if ((current.authorType === 'guest' && current.authorId === localStorage.getItem('guest_id')) ||
-            (current.authorType === 'meteor' && current.authorId === user_id)) {
+            (current.authorType === 'meteor' && current.authorId === userId)) {
             return 1;
         }
         if ((current.opponentType === 'guest' && current.opponentId === localStorage.getItem('guest_id')) ||
-            (current.opponentType === 'meteor' && current.opponentId === user_id)) {
+            (current.opponentType === 'meteor' && current.opponentId === userId)) {
             return 2;
         }
         return null;
@@ -90,32 +101,60 @@ class Game extends Component {
     }
 
     checkReplay(board) {
-        let user_id = null;
+        let userId = null;
         let guest = localStorage.getItem('guest_id');
 
-        if (board.replay_id) {
+        if (board.replayId) {
             if (Meteor.user()) {
-                user_id = Meteor.user()._id;
+                userId = Meteor.user()._id;
             } else {
-                check(guest, String);
-                user_id = guest;
+                userId = guest;
             }
 
-            if ((board.authorReplay && (board.authorId === guest || board.authorId === user_id)) ||
-                (board.opponentReplay && (board.opponentId === guest || board.opponentId === user_id))){
+            if ((board.authorReplay && (board.authorId === guest || board.authorId === userId)) ||
+                (board.opponentReplay && (board.opponentId === guest || board.opponentId === userId))){
                 Meteor.call('boards.replayAccepted', this.props.boards[0]._id, localStorage.getItem('guest_id'));
-                FlowRouter.go('game.show', {_id: board.replay_id});
+                FlowRouter.go('game.show', {_id: board.replayId});
             }
         }
     }
 
+    isMyTurn() {
+        let userId = this.getCurrentUser().userId;
+        const current = this.props.boards[0];
+
+        if (current.end) {
+            return false;
+        }
+        if (current.whiteIsNext && current.creatorIsWhite && userId === current.authorId) {
+            return true;
+        }
+        if (current.whiteIsNext && !current.creatorIsWhite && userId === current.opponentId) {
+            return true;
+        }
+        if (!current.whiteIsNext && current.creatorIsWhite && userId === current.opponentId) {
+            return true;
+        }
+        if (!current.whiteIsNext && !current.creatorIsWhite && userId === current.authorId) {
+            return true;
+        }
+        return false;
+    }
+
+    switchPrivate() {
+        Meteor.call(
+            'boards.switchPrivacy',
+            this.props.boards[0]._id,
+            localStorage.getItem('guest_id'),
+            !this.props.boards[0].private
+        );
+    }
+
     render() {
-        if (!this.loaded) {
-            if (!this.loadBoard()) {
-                return (
-                    <h1>Chargement du plateau ...</h1>
-                );
-            }
+        if (!this.loaded && !this.loadBoard()) {
+            return (
+                <h1>Chargement du plateau ...</h1>
+            );
         }
         if (!this.isPlayerAllowed()) {
             return (
@@ -124,7 +163,11 @@ class Game extends Component {
         }
 
         const current = this.props.boards[0];
+        document.title = current.game;
 
+        if (this.isMyTurn()) {
+            document.title = 'A vous !';
+        }
         if (!current.end) {
             this.changeFavicon((current.whiteIsNext ? '/favicon-w' : '/favicon-b'));
         } else {
@@ -142,30 +185,41 @@ class Game extends Component {
                     <div id="gameScore">
                         <div className="scoreboard">
                             <div className="scoreboardPlayer">
-                                <div className={(current.whiteIsNext && !current.end) ? "scoreboardPlayerActive" : "scoreboardPlayerNotActive"}>
+                                <div className={(current.whiteIsNext && !current.end) ? 'scoreboardPlayerActive' : 'scoreboardPlayerNotActive'}>
                                     <div className="scoreboardPlayerWhite"></div>
                                 </div>
                                 <div className="scoreboardPlayerName">
-                                    <span className={(current.end && ((current.winnerIsAuthor && current.creatorIsWhite) || (!current.winnerIsAuthor && !current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
+                                    <span className={(current.end && !current.draw && ((current.winnerIsAuthor && current.creatorIsWhite) || (!current.winnerIsAuthor && !current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
                                     {(current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}
                                 </div>
                             </div>
 
                             <hr className="scoreboardSeparator"></hr>
-                            <span className="scoreboardSeparatorText">{" VS "}</span>
+                            <span className="scoreboardSeparatorText">{' VS '}</span>
                             <hr className="scoreboardSeparator"></hr>
 
                             <div className="scoreboardPlayer">
-                                <div className={(!current.whiteIsNext && !current.end)? "scoreboardPlayerActive" : "scoreboardPlayerNotActive"}>
+                                <div className={(!current.whiteIsNext && !current.end)? 'scoreboardPlayerActive' : 'scoreboardPlayerNotActive'}>
                                     <div className="scoreboardPlayerBlack"></div>
                                 </div>
                                 <div className="scoreboardPlayerName">
-                                    <span className={(current.end && ((current.winnerIsAuthor && !current.creatorIsWhite) || (!current.winnerIsAuthor && current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
+                                    <span className={(current.end && !current.draw && ((current.winnerIsAuthor && !current.creatorIsWhite) || (!current.winnerIsAuthor && current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
                                     {(!current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}
                                     </div>
                             </div>
-                            <button onClick={function(){document.location.href="/"}}>Accueil</button>
-                            <button onClick={current => this.replay(current)}>Rejouer</button>
+                            <ToggleButton
+                                check={current.private}
+                                onClick={() => this.switchPrivate()}
+                            />
+                            <span>Lien visiteur : </span>
+                            <input
+                                type="text"
+                                className="disableInput"
+                                defaultValue={document.location.host + '/visitor/' + current._id}
+                                disabled
+                            />
+                            <button onClick={function(){document.location.href='/';}}>Accueil</button>
+                            <button onClick={(current) => this.replay(current)}>Rejouer</button>
 
                         </div>
                     </div>
@@ -174,7 +228,7 @@ class Game extends Component {
                             dots={current.dots}
                             size={current.size}
                             last={current.last}
-                            onClick={i => this.handleClick(i)}
+                            onClick={(i) => this.handleClick(i)}
                         />
                     </div>
                 </div>

@@ -21,8 +21,8 @@ class App extends Component {
         const game = {
             size: parseInt(size),
             game: name,
-            guest_id: localStorage.getItem('guest_id'),
-            opponent: opponent
+            guestId: localStorage.getItem('guest_id'),
+            opponent
         };
         Meteor.call('boards.insert', game, function(error, result) {
             if (error) {
@@ -34,7 +34,7 @@ class App extends Component {
     }
 
     getLaunchedGames() {
-        if (this.props.launchGames !== undefined && this.props.launchGames.length > 0 ) {
+        if (typeof this.props.launchGames !== 'undefined' && this.props.launchGames.length > 0 ) {
             return this.props.launchGames;
         } else {
             return [];
@@ -52,7 +52,7 @@ class App extends Component {
     }
 
     getLastGames() {
-        if (this.props.lastGames !== undefined && this.props.lastGames.length > 0 ) {
+        if (typeof this.props.lastGames !== 'undefined' && this.props.lastGames.length > 0 ) {
             return this.props.lastGames;
         } else {
             return [];
@@ -76,7 +76,6 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.props.launchGames);
         return (
             <div className="container">
                 <header>
@@ -153,35 +152,35 @@ class App extends Component {
 
 export default withTracker(() => {
     Meteor.subscribe('boards', localStorage.getItem('guest_id'));
-    let user_id = localStorage.getItem('guest_id');
+    let userId = localStorage.getItem('guest_id');
     if (Meteor.user()) {
-        user_id = Meteor.user()._id;
+        userId = Meteor.user()._id;
     }
     return {
-        launchGames: Boards.find({end: false}, {sort:{createdAt: -1}}).fetch(),
-        lastGames: Boards.find({end: true}, {sort:{createdAt: -1}, limit: 10}).fetch(),
+        launchGames: Boards.find({end: false}, {sort:{lastActionAt: -1, createdAt: -1}}).fetch(),
+        lastGames: Boards.find({end: true}, {sort:{lastActionAt: -1, createdAt: -1}, limit: 10}).fetch(),
         winGames: Boards.find({
             $and: [
                 {end: true},
                 {$or: [
-                    {$and: [{authorId: user_id}, {winnerIsAuthor: true}]},
-                    {$and: [{opponentId: user_id}, {winnerIsAuthor: false}]}
+                    {$and: [{authorId: userId}, {winnerIsAuthor: true}]},
+                    {$and: [{opponentId: userId}, {winnerIsAuthor: false}]}
                 ]}
             ]}).count(),
         loseGames: Boards.find({
             $and: [
                 {end: true},
                 {$or: [
-                        {$and: [{authorId: user_id}, {winnerIsAuthor: false}]},
-                        {$and: [{opponentId: user_id}, {winnerIsAuthor: true}]}
+                        {$and: [{authorId: userId}, {winnerIsAuthor: false}]},
+                        {$and: [{opponentId: userId}, {winnerIsAuthor: true}]}
                     ]}
             ]}).count(),
         drawGames: Boards.find({
             $and: [
                 {end: true},
                 {$or: [
-                        {$and: [{authorId: user_id}, {draw: true}]},
-                        {$and: [{opponentId: user_id}, {draw: true}]}
+                        {$and: [{authorId: userId}, {draw: true}]},
+                        {$and: [{opponentId: userId}, {draw: true}]}
                     ]}
             ]}).count(),
     };
