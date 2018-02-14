@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { withTracker } from 'meteor/react-meteor-data';
-import AccountsUIWrapper from '../AccountsUIWrapper.js';
 import { Boards } from '../../api/boards.js';
 import { Meteor } from 'meteor/meteor';
 
 import Board from './parts/Board.js';
+import Panel from './components/Panel.js';
+import Header from './components/Header.js';
 
 class Visitor extends Component {
 
@@ -26,7 +27,10 @@ class Visitor extends Component {
     render() {
         if (!this.loadBoard()) {
             return (
-                <h1>Chargement du plateau ...</h1>
+                <Panel
+                    type='error'
+                    text='THIS_GAME_IS_PRIVATE'
+                />
             );
         }
         const current = this.props.boards[0];
@@ -34,10 +38,9 @@ class Visitor extends Component {
 
         return (
             <div className="container">
-                <header>
-                    <h1>{current.game}</h1>
-                    <AccountsUIWrapper />
-                </header>
+                <Header
+                    title={current.game}
+                />
                 <div className="content">
                     <div id="gameScore">
                         <div className="scoreboard">

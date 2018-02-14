@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Meteor} from 'meteor/meteor';
+import i18n from 'meteor/universe:i18n';
 
 export default class LastGame extends Component {
     render() {
@@ -7,6 +8,7 @@ export default class LastGame extends Component {
         let result = 'drawTrophy';
         let opponent = null;
         const game = this.props.game;
+        const T = i18n.createComponent();
 
         if (Meteor.user()) {
             userId = Meteor.user()._id;
@@ -32,7 +34,7 @@ export default class LastGame extends Component {
                 <td><strong className={result}></strong></td>
                 <td><strong>{game.game}</strong></td>
                 <td>{opponent}</td>
-                <td><button onClick={this.props.onClick.bind(this)}>Revoir</button></td>
+                <td><button onClick={this.props.onClick.bind(this)}><T>BTN_REVIEW</T></button></td>
             </tr>
         );
     }

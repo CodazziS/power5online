@@ -26,6 +26,7 @@ export default class LaunchedGame extends Component {
         let userId = localStorage.getItem('guest_id');
         let opponent = null;
         const game = this.props.game;
+        const T = i18n.createComponent();
 
         if (Meteor.user()) {
             userId = Meteor.user()._id;
@@ -38,9 +39,9 @@ export default class LaunchedGame extends Component {
         }
         return (
             <tr>
-                <td><strong>{this.isMyTurn(userId, game) ? 'Votre tour' : 'Tour opposant'}</strong></td>
+                <td><strong><T>{this.isMyTurn(userId, game) ? 'MY_ROUND' : 'OPPONENT_ROUND'}</T></strong></td>
                 <td>{opponent}</td>
-                <td><button onClick={this.props.onClick.bind(this)}>Reprendre</button></td>
+                <td><button onClick={this.props.onClick.bind(this)}><T>GO_BACK_PLAY</T></button></td>
             </tr>
         );
     }

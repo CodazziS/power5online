@@ -1,13 +1,15 @@
 import React, { Component } from 'react';
 import ReactDOM from 'react-dom';
+import i18n from 'meteor/universe:i18n';
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
-import AccountsUIWrapper from '../AccountsUIWrapper.js';
+
 import { Boards } from '../../api/boards.js';
+
 import LaunchedGame from './parts/LaunchedGame.js';
 import LastGame from './parts/LastGame.js';
-
+import Header from './components/Header.js';
 
 class App extends Component {
 
@@ -76,59 +78,59 @@ class App extends Component {
     }
 
     render() {
+        const T = i18n.createComponent();
         return (
             <div className="container">
-                <header>
-                    <h1>Power5</h1>
-                    <AccountsUIWrapper />
-                </header>
+                <Header
+                    title="APP_TITLE"
+                />
                 <div className="content">
                     <div id="newGameBlock">
-                        <h2>Créer une nouvelle partie</h2><br />
+                        <h2><T>CREATE_NEW_GAME</T></h2><br />
                         <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-                            <strong>Nom de la partie : </strong>
+                            <strong><T>NEW_GAME_NAME</T></strong>
                             <input
                                 type="text"
                                 ref="gameName"
-                                defaultValue="My game"
-                                placeholder="GameName"
+                                defaultValue=""
+                                placeholder={i18n.__('NEW_GAME_NAME')}
                             /><br />
-                            <strong>Taille du plateau : </strong>
+                            <strong><T>NEW_GAME_SIZE</T></strong>
                             <input
                                 type="number"
                                 min="6"
                                 max="30"
                                 ref="gameSize"
                                 defaultValue="19"
-                                placeholder="Game size"
+                                placeholder={i18n.__('NEW_GAME_SIZE')}
                             /><br />
-                            <strong>Inviter un joueur (optionnel) : </strong>
+                            <strong><T>NEW_GAME_INVITATION</T></strong>
                             <input
                                 type="text"
                                 ref="gameOpponent"
-                                placeholder="Username"
+                                placeholder={i18n.__('NEW_GAME_INVITATION_USERNAME')}
                             /><br />
-                            <input type="submit"/>
+                            <input type="submit" value={i18n.__('NEW_GAME_SUBMIT')}/>
                         </form>
                     </div>
                     <div id="gamesStats">
-                        <h2>Vos statistiques</h2><br />
+                        <h2><T>STATS_TITLE</T></h2><br />
                         <table>
                             <tbody>
-                            <tr><th>&#x1F3C6; Parties gagnées : </th><td>{this.props.winGames}</td></tr>
-                            <tr><th>&#x0274C; Parties perdues : </th><td>{this.props.loseGames}</td></tr>
-                            <tr><th>&#x1F3F3; &nbsp;&nbsp;Parties nulles : </th><td>{this.props.drawGames}</td></tr>
+                            <tr><th>&#x1F3C6; <T>GAMES_WIN</T> : </th><td>{this.props.winGames}</td></tr>
+                            <tr><th>&#x0274C; <T>GAMES_LOSE</T> : </th><td>{this.props.loseGames}</td></tr>
+                            <tr><th>&#x1F3F3; &nbsp;&nbsp;<T>GAMES_DRAW</T> : </th><td>{this.props.drawGames}</td></tr>
                             </tbody>
                         </table>
                     </div>
                     <div id="gamesLaunched">
-                        <h2>Vos jeux en cours</h2><br />
+                        <h2><T>STATS_LAUNCHED</T></h2><br />
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Jeu</th>
-                                    <th>Opposant</th>
-                                    <th>Reprendre</th>
+                                    <th>&nbsp;</th>
+                                    <th><T>OPPONENT</T></th>
+                                    <th>&nbsp;</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -137,7 +139,7 @@ class App extends Component {
                         </table>
                     </div>
                     <div id="lastGames">
-                        <h2>Vos jeux passés (10 derniers)</h2><br />
+                        <h2><T>GAMES_LASTS</T></h2><br />
                         <table>
                             <tbody>
                             {this.renderLastGames()}
@@ -157,8 +159,16 @@ export default withTracker(() => {
         userId = Meteor.user()._id;
     }
     return {
-        launchGames: Boards.find({end: false}, {sort:{lastActionAt: -1, createdAt: -1}}).fetch(),
-        lastGames: Boards.find({end: true}, {sort:{lastActionAt: -1, createdAt: -1}, limit: 10}).fetch(),
+        launchGames: Boards.find(
+            {end: false},
+            {sort:{lastActionAt: -1, createdAt: -1}}
+            ).fetch(),
+
+        lastGames: Boards.find(
+            {end: true},
+            {sort:{lastActionAt: -1, createdAt: -1}, limit: 10}
+            ).fetch(),
+
         winGames: Boards.find({
             $and: [
                 {end: true},
@@ -167,6 +177,7 @@ export default withTracker(() => {
                     {$and: [{opponentId: userId}, {winnerIsAuthor: false}]}
                 ]}
             ]}).count(),
+
         loseGames: Boards.find({
             $and: [
                 {end: true},
@@ -175,6 +186,7 @@ export default withTracker(() => {
                         {$and: [{opponentId: userId}, {winnerIsAuthor: true}]}
                     ]}
             ]}).count(),
+
         drawGames: Boards.find({
             $and: [
                 {end: true},

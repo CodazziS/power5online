@@ -2,6 +2,7 @@ import React from 'react';
 
 export default class ToggleButton extends React.Component {
     render() {
+        const T = i18n.createComponent();
         return (
             <div className="toggleButton">
                 <label className="toggleButtonSwitch" onClick={this.props.onClick}>
@@ -9,7 +10,7 @@ export default class ToggleButton extends React.Component {
                     <span className="toggleButtonSlider"></span>
                 </label>
                 <span className="toggleButtonLabel">
-                    {this.props.check ? 'Partie privée' : 'Partie publique'}
+                    <T>{this.props.check ? 'GAME_PRIVATE' : 'GAME_PUBLIC'}</T>
                 </span>
             </div>
         );
