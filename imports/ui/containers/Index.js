@@ -22,7 +22,7 @@ class App extends Component {
             size: parseInt(size),
             game: name,
             guestId: localStorage.getItem('guest_id'),
-            opponent: opponent
+            opponent
         };
         Meteor.call('boards.insert', game, function(error, result) {
             if (error) {
@@ -34,7 +34,7 @@ class App extends Component {
     }
 
     getLaunchedGames() {
-        if (this.props.launchGames !== undefined && this.props.launchGames.length > 0 ) {
+        if (typeof this.props.launchGames !== 'undefined' && this.props.launchGames.length > 0 ) {
             return this.props.launchGames;
         } else {
             return [];
@@ -76,7 +76,6 @@ class App extends Component {
     }
 
     render() {
-        console.log(this.props.launchGames);
         return (
             <div className="container">
                 <header>

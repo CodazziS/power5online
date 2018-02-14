@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Meteor} from "meteor/meteor";
+import {Meteor} from 'meteor/meteor';
 
 export default class LastGame extends Component {
     render() {

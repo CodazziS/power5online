@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { withTracker } from 'meteor/react-meteor-data';
 import AccountsUIWrapper from '../AccountsUIWrapper.js';
 import { Boards } from '../../api/boards.js';
@@ -70,7 +71,7 @@ class Visitor extends Component {
                             dots={current.dots}
                             size={current.size}
                             last={current.last}
-                            onClick={i => this.handleClick(i)}
+                            onClick={(i) => this.handleClick(i)}
                         />
                     </div>
                 </div>

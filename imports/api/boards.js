@@ -51,7 +51,7 @@ function getCurrentUser(guestId) {
         userName = 'guest_' + userId;
         userType = 'guest';
     }
-    return {userId: userId, userName: userName, userType: userType};
+    return {userId, userName, userType};
 }
 
 function checkUserEditAction(game, guestId) {
@@ -82,7 +82,7 @@ function checkWinner(dots, size) {
                     };
                 }
                 /* 5 vertical */
-                if (dots[rows + 4] !== undefined &&
+                if (typeof dots[rows + 4] !== 'undefined' &&
                     dots[rows + 1][cols].state === val &&
                     dots[rows + 2][cols].state === val &&
                     dots[rows + 3][cols].state === val &&
@@ -94,7 +94,7 @@ function checkWinner(dots, size) {
                 }
 
                 /* 5 oblige right */
-                if (dots[rows + 4] !== undefined && dots[rows + 4][cols + 4] !== undefined &&
+                if (typeof dots[rows + 4] !== 'undefined' && typeof dots[rows + 4][cols + 4] !== 'undefined' &&
                     dots[rows + 1][cols + 1].state === val &&
                     dots[rows + 2][cols + 2].state === val &&
                     dots[rows + 3][cols + 3].state === val &&
@@ -106,7 +106,7 @@ function checkWinner(dots, size) {
                 }
 
                 /* 5 oblique left */
-                if (dots[rows + 4] !== undefined && dots[rows + 4][cols - 4] !== undefined &&
+                if (typeof dots[rows + 4] !== 'undefined' && typeof dots[rows + 4][cols - 4] !== 'undefined' &&
                     dots[rows + 1][cols - 1].state === val &&
                     dots[rows + 2][cols - 2].state === val &&
                     dots[rows + 3][cols - 3].state === val &&
@@ -138,7 +138,7 @@ Meteor.methods({
         }
 
         if (game.opponent) {
-            let opponentRegex = new RegExp(["^", game.opponent, "$"].join(""), "i");
+            let opponentRegex = new RegExp(['^', game.opponent, '$'].join(''), 'i');
             let opponent = Meteor.users.findOne({username: { $regex: opponentRegex }});
 
             if (opponent) {
@@ -301,7 +301,7 @@ Meteor.methods({
             return;
         }
 
-        dots[row][col].state = board.whiteIsNext ? "white" : "black";
+        dots[row][col].state = board.whiteIsNext ? 'white' : 'black';
         Boards.update(gameId, {
             $set: {
                 dots: dots,
@@ -316,7 +316,7 @@ Meteor.methods({
             let winnerIsAuthor = null;
             let winDots = checkWin.dots;
 
-            winnerIsAuthor = (winner === "white") ? (board.creatorIsWhite === true) : (board.creatorIsWhite === false);
+            winnerIsAuthor = (winner === 'white') ? (board.creatorIsWhite === true) : (board.creatorIsWhite === false);
             dots[winDots[0][0]][winDots[0][1]].win = true;
             dots[winDots[1][0]][winDots[1][1]].win = true;
             dots[winDots[2][0]][winDots[2][1]].win = true;
@@ -325,9 +325,9 @@ Meteor.methods({
 
             Boards.update(gameId, {
                 $set: {
-                    dots: dots,
+                    dots,
                     end: true,
-                    winnerIsAuthor: winnerIsAuthor,
+                    winnerIsAuthor,
                     draw: false
                 },
             });

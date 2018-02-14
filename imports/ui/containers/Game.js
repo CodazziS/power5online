@@ -1,9 +1,10 @@
 import React, { Component } from 'react';
 
+import { FlowRouter } from 'meteor/kadira:flow-router';
 import { withTracker } from 'meteor/react-meteor-data';
 import AccountsUIWrapper from '../AccountsUIWrapper.js';
 import { Boards } from '../../api/boards.js';
-import { Meteor } from "meteor/meteor";
+import { Meteor } from 'meteor/meteor';
 
 import Board from './parts/Board.js';
 import ToggleButton from './components/ToggleButton.js';
@@ -198,7 +199,7 @@ class Game extends Component {
                             <hr className="scoreboardSeparator"></hr>
 
                             <div className="scoreboardPlayer">
-                                <div className={(!current.whiteIsNext && !current.end)? "scoreboardPlayerActive" : "scoreboardPlayerNotActive"}>
+                                <div className={(!current.whiteIsNext && !current.end)? 'scoreboardPlayerActive' : 'scoreboardPlayerNotActive'}>
                                     <div className="scoreboardPlayerBlack"></div>
                                 </div>
                                 <div className="scoreboardPlayerName">
@@ -217,7 +218,7 @@ class Game extends Component {
                                 defaultValue={document.location.host + '/visitor/' + current._id}
                                 disabled
                             />
-                            <button onClick={function(){document.location.href='/'}}>Accueil</button>
+                            <button onClick={function(){document.location.href='/';}}>Accueil</button>
                             <button onClick={(current) => this.replay(current)}>Rejouer</button>
 
                         </div>
@@ -227,7 +228,7 @@ class Game extends Component {
                             dots={current.dots}
                             size={current.size}
                             last={current.last}
-                            onClick={i => this.handleClick(i)}
+                            onClick={(i) => this.handleClick(i)}
                         />
                     </div>
                 </div>
