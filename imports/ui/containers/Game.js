@@ -4,6 +4,7 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { withTracker } from 'meteor/react-meteor-data';
 import { Boards } from '../../api/boards.js';
 import { Meteor } from 'meteor/meteor';
+import i18n from 'meteor/universe:i18n';
 
 import Board from './parts/Board.js';
 import Header from './components/Header.js';
@@ -14,17 +15,11 @@ class Game extends Component {
 
     constructor(props) {
         super(props);
-        this.loaded = false;
         this._id = FlowRouter.getParam('_id');
-        this.allowed = false;
-    }
-
-    loadBoard() {
-        return (this.props.boards && this.props.boards[0]);
     }
 
     handleClick(rowcol) {
-        Meteor.call('boards.addDot', this.props.boards[0]._id, rowcol[0], rowcol[1], localStorage.getItem('guest_id'));
+        Meteor.call('boards.addDot', this.props.board._id, rowcol[0], rowcol[1], localStorage.getItem('guest_id'));
     }
 
     getCurrentUser(guestId) {
@@ -44,44 +39,6 @@ class Game extends Component {
         return {userId, userName, userType};
     }
 
-    getPlayerType() {
-        const current = this.props.boards[0];
-        let userId = this.getCurrentUser().userId;
-
-        if ((current.authorType === 'guest' && current.authorId === localStorage.getItem('guest_id')) ||
-            (current.authorType === 'meteor' && current.authorId === userId)) {
-            return 1;
-        }
-        if ((current.opponentType === 'guest' && current.opponentId === localStorage.getItem('guest_id')) ||
-            (current.opponentType === 'meteor' && current.opponentId === userId)) {
-            return 2;
-        }
-        return null;
-    }
-
-    isPlayerAllowed() {
-        if (this.allowed) {
-            return true;
-        }
-        if (this.getPlayerType() !== null) {
-            this.allowed = true;
-            return true;
-        }
-
-        const current = this.props.boards[0];
-        if (current.opponentType === null) {
-            Meteor.call('boards.setOpponent', this.props.boards[0]._id, localStorage.getItem('guest_id'), function(error, result) {
-                if (error) {
-                    alert('Vous ne pouvez pas rejoindre la partie');
-                } else {
-                    this.allowed = true;
-                }
-            });
-        }
-
-        return this.allowed;
-    }
-
     changeFavicon(src) {
         document.head.removeChild(document.getElementById('favicon'));
         document.head.removeChild(document.getElementById('faviconpng'));
@@ -98,7 +55,7 @@ class Game extends Component {
     }
 
     replay() {
-        Meteor.call('boards.replay', this.props.boards[0]._id, localStorage.getItem('guest_id'));
+        Meteor.call('boards.replay', this.props.board._id, localStorage.getItem('guest_id'));
     }
 
     checkReplay(board) {
@@ -114,7 +71,7 @@ class Game extends Component {
 
             if ((board.authorReplay && (board.authorId === guest || board.authorId === userId)) ||
                 (board.opponentReplay && (board.opponentId === guest || board.opponentId === userId))){
-                Meteor.call('boards.replayAccepted', this.props.boards[0]._id, localStorage.getItem('guest_id'));
+                Meteor.call('boards.replayAccepted', this.props.board._id, localStorage.getItem('guest_id'));
                 FlowRouter.go('game.show', {_id: board.replayId});
             }
         }
@@ -122,7 +79,7 @@ class Game extends Component {
 
     isMyTurn() {
         let userId = this.getCurrentUser().userId;
-        const current = this.props.boards[0];
+        const current = this.props.board;
 
         if (current.end) {
             return false;
@@ -145,37 +102,42 @@ class Game extends Component {
     switchPrivate() {
         Meteor.call(
             'boards.switchPrivacy',
-            this.props.boards[0]._id,
+            this.props.board._id,
             localStorage.getItem('guest_id'),
-            !this.props.boards[0].private
+            !this.props.board.private
         );
     }
 
     render() {
         const T = i18n.createComponent();
 
-        if (!this.loaded && !this.loadBoard()) {
-            return (
-                <Panel
-                    type='warn'
-                    text='GAME_LOADING'
-                />
-            );
+        if (!this.props.board) {
+            return (<Panel type='warn' text='GAME_LOADING' />);
         }
-        if (!this.isPlayerAllowed()) {
+        if (!this.props.board.authorId) {
+            if (!this.props.board.private) {
+                FlowRouter.go('game.spec', {_id: this.props.board._id});
+                return;
+            }
             return (
-                <Panel
-                    type='error'
-                    text='GAME_FULL'
-                />
+                <Panel type='error' text='GAME_FULL' />
             );
         }
 
-        const current = this.props.boards[0];
+        const current = this.props.board;
         document.title = current.game;
 
         if (this.isMyTurn()) {
             document.title = i18n.__('MY_ROUND');
+            // Push.create(i18n.__('APP_TITLE'), {
+            //     body: i18n.__('MY_ROUND_TXT'),
+            //     icon: '/favicon-b.png',
+            //     timeout: 6,
+            //     onClick: function () {
+            //         window.focus();
+            //         this.close();
+            //     }
+            // });
         }
         if (!current.end) {
             this.changeFavicon((current.whiteIsNext ? '/favicon-w' : '/favicon-b'));
@@ -245,8 +207,10 @@ class Game extends Component {
 }
 
 export default withTracker(() => {
-    Meteor.subscribe('boards', localStorage.getItem('guest_id'));
+    Meteor.subscribe('myGames', localStorage.getItem('guest_id'));
+    Meteor.subscribe('gameAuthorization', localStorage.getItem('guest_id'), FlowRouter.getParam('_id'));
+
     return {
-        boards: Boards.find({_id: FlowRouter.getParam('_id')}).fetch(),
+        board: Boards.findOne(FlowRouter.getParam('_id'))
     };
 })(Game);

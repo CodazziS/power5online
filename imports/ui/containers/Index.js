@@ -92,7 +92,7 @@ class App extends Component {
                             <input
                                 type="text"
                                 ref="gameName"
-                                defaultValue=""
+                                defaultValue={i18n.__('NEW_GAME_NAME_VALUE')}
                                 placeholder={i18n.__('NEW_GAME_NAME')}
                             /><br />
                             <strong><T>NEW_GAME_SIZE</T></strong>
@@ -153,7 +153,7 @@ class App extends Component {
 }
 
 export default withTracker(() => {
-    Meteor.subscribe('boards', localStorage.getItem('guest_id'));
+    Meteor.subscribe('myGames', localStorage.getItem('guest_id'));
     let userId = localStorage.getItem('guest_id');
     if (Meteor.user()) {
         userId = Meteor.user()._id;

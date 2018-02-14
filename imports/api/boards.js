@@ -5,18 +5,31 @@ import { check } from 'meteor/check';
 export const Boards = new Mongo.Collection('boards');
 
 if (Meteor.isServer) {
-    // This code only runs on the server
-    Meteor.publish('boards', function boardPublication(guestId) {
+    Meteor.publish('myGames', function (guestId) {
         return Boards.find({
             $or: [
-                { authorId: this.userId },
-                { opponentId: this.userId },
-                { authorId: guestId },
-                { opponentId: guestId },
-                { opponentId: null },
-                { private: false },
-            ],
-        });
+                {authorId: this.userId},
+                {opponentId: this.userId},
+                {authorId: guestId},
+                {opponentId: guestId},
+                {opponentId: null},
+            ]});
+    });
+    Meteor.publish('gameAuthorization', function (guestId, gameId) {
+        return Boards.find(
+            {_id: gameId},
+            {
+                fields: {_id: 1, private: 1}
+            }
+       );
+    });
+    Meteor.publish('gameVisitor', function (guestId, gameId) {
+        return Boards.find(
+            {_id: gameId, private: false},
+            {
+                fields: {authorReplay: 0, opponentReplay: 0, replayId: 0}
+            }
+        );
     });
 }
 
