@@ -20,6 +20,10 @@ body {
     padding: 0;
 }
 
+a {
+    text-decoration: none;
+    color: initial;
+}
 header {
     background: #d2edf4;
     background-image: linear-gradient(to bottom, #d0edf5, #e1e5f0 100%);
@@ -304,4 +308,20 @@ input:checked + .toggleButtonSlider:before {
     -webkit-transform: translateX(26px);
     -ms-transform: translateX(26px);
     transform: translateX(26px);
+}
+
+/*********** PANEL *********/
+.panel {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #FFF;
+    padding: 20px;
+    text-align: center;
+}
+.panel .error {
+    color: red;
+}
+.panel .warn {
+    color: yellowgreen;
 }

@@ -1,11 +1,25 @@
 import React from 'react';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { mount } from 'react-mounter';
+import i18n from 'meteor/universe:i18n';
 
 import Index from '../imports/ui/containers/Index.js';
 import Game from '../imports/ui/containers/Game.js';
 import Visitor from '../imports/ui/containers/Visitor.js';
 import '../imports/startup/accounts-config.js';
+
+
+/* Language */
+function getLang () {
+    return (
+        navigator.languages && navigator.languages[0] ||
+        navigator.language ||
+        navigator.browserLanguage ||
+        navigator.userLanguage ||
+        'en-US'
+    );
+}
+i18n.setLocale(getLang());
 
 /* Create session if not exist */
 if (localStorage.getItem('guest_id') === null) {
@@ -29,7 +43,6 @@ FlowRouter.notFound = {
         });
     },
 };
-
 /* GAME */
 FlowRouter.route('/game/:_id', {
     name: 'game.show',

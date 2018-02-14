@@ -2,11 +2,12 @@ import React, { Component } from 'react';
 
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { withTracker } from 'meteor/react-meteor-data';
-import AccountsUIWrapper from '../AccountsUIWrapper.js';
 import { Boards } from '../../api/boards.js';
 import { Meteor } from 'meteor/meteor';
 
 import Board from './parts/Board.js';
+import Header from './components/Header.js';
+import Panel from './components/Panel.js';
 import ToggleButton from './components/ToggleButton.js';
 
 class Game extends Component {
@@ -151,14 +152,22 @@ class Game extends Component {
     }
 
     render() {
+        const T = i18n.createComponent();
+
         if (!this.loaded && !this.loadBoard()) {
             return (
-                <h1>Chargement du plateau ...</h1>
+                <Panel
+                    type='warn'
+                    text='GAME_LOADING'
+                />
             );
         }
         if (!this.isPlayerAllowed()) {
             return (
-                <h1>Ce jeu est complet ...</h1>
+                <Panel
+                    type='error'
+                    text='GAME_FULL'
+                />
             );
         }
 
@@ -166,7 +175,7 @@ class Game extends Component {
         document.title = current.game;
 
         if (this.isMyTurn()) {
-            document.title = 'A vous !';
+            document.title = i18n.__('MY_ROUND');
         }
         if (!current.end) {
             this.changeFavicon((current.whiteIsNext ? '/favicon-w' : '/favicon-b'));
@@ -177,10 +186,9 @@ class Game extends Component {
 
         return (
             <div className="container">
-                <header>
-                    <h1>{current.game}</h1>
-                    <AccountsUIWrapper />
-                </header>
+                <Header
+                    title={current.game}
+                />
                 <div className="content">
                     <div id="gameScore">
                         <div className="scoreboard">
@@ -211,15 +219,14 @@ class Game extends Component {
                                 check={current.private}
                                 onClick={() => this.switchPrivate()}
                             />
-                            <span>Lien visiteur : </span>
+                            <span><T>VISITOR_LINK</T></span>
                             <input
                                 type="text"
                                 className="disableInput"
                                 defaultValue={document.location.host + '/visitor/' + current._id}
                                 disabled
                             />
-                            <button onClick={function(){document.location.href='/';}}>Accueil</button>
-                            <button onClick={(current) => this.replay(current)}>Rejouer</button>
+                            <button onClick={(current) => this.replay(current)}><T>REPLAY</T></button>
 
                         </div>
                     </div>
