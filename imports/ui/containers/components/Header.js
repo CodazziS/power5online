@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from 'meteor/universe:i18n';
 import AccountsUIWrapper from '../../AccountsUIWrapper.js';
 
 export default class Header extends React.Component {

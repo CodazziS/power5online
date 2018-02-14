@@ -16,24 +16,21 @@ class Visitor extends Component {
         this._id = FlowRouter.getParam('_id');
     }
 
-    loadBoard() {
-        return (this.props.boards && this.props.boards[0]);
-    }
-
     handleClick() {
         return;
     }
 
     render() {
-        if (!this.loadBoard()) {
+        if (!this.props.board) {
+            return (<Panel type='warn' text='GAME_LOADING' />);
+        }
+        if (!this.props.board.authorId) {
             return (
-                <Panel
-                    type='error'
-                    text='THIS_GAME_IS_PRIVATE'
-                />
+                <Panel type='error' text='THIS_GAME_IS_PRIVATE' />
             );
         }
-        const current = this.props.boards[0];
+
+        const current = this.props.board;
         document.title = current.game;
 
         return (
@@ -84,8 +81,10 @@ class Visitor extends Component {
 }
 
 export default withTracker(() => {
-    Meteor.subscribe('boards', localStorage.getItem('guest_id'));
+    Meteor.subscribe('gameVisitor', localStorage.getItem('guest_id'), FlowRouter.getParam('_id'));
+    Meteor.subscribe('gameAuthorization', localStorage.getItem('guest_id'), FlowRouter.getParam('_id'));
+
     return {
-        boards: Boards.find({_id: FlowRouter.getParam('_id')}).fetch(),
+        board: Boards.findOne(),
     };
 })(Visitor);

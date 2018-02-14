@@ -153,7 +153,7 @@ class App extends Component {
 }
 
 export default withTracker(() => {
-    Meteor.subscribe('boards', localStorage.getItem('guest_id'));
+    Meteor.subscribe('myGames', localStorage.getItem('guest_id'));
     let userId = localStorage.getItem('guest_id');
     if (Meteor.user()) {
         userId = Meteor.user()._id;

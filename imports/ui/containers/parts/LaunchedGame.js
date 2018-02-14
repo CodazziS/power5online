@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import i18n from 'meteor/universe:i18n';
 import {Meteor} from 'meteor/meteor';
 
 export default class LaunchedGame extends Component {

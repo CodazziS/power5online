@@ -1,4 +1,5 @@
 import React from 'react';
+import i18n from 'meteor/universe:i18n';
 
 export default class Panel extends React.Component {
     render() {
