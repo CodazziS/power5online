@@ -64,6 +64,7 @@ function checkUserEditAction(game, guestId) {
 
 function checkWinner(dots, size) {
     let rows = 0;
+    let draw = true;
 
     for(rows; rows < size; rows++) {
         let cols = 0;
@@ -77,6 +78,7 @@ function checkWinner(dots, size) {
                     dots[rows][cols + 3].state === val &&
                     dots[rows][cols + 4].state === val) {
                     return {
+                        draw: false,
                         winner: val,
                         dots: [[rows, cols], [rows, cols+1], [rows, cols+2], [rows, cols+3], [rows, cols+4]]
                     };
@@ -88,6 +90,7 @@ function checkWinner(dots, size) {
                     dots[rows + 3][cols].state === val &&
                     dots[rows + 4][cols].state === val) {
                     return {
+                        draw: false,
                         winner: val,
                         dots: [[rows, cols], [rows+1, cols], [rows+2, cols], [rows+3, cols], [rows+4, cols]]
                     };
@@ -100,6 +103,7 @@ function checkWinner(dots, size) {
                     dots[rows + 3][cols + 3].state === val &&
                     dots[rows + 4][cols + 4].state === val) {
                     return {
+                        draw: false,
                         winner: val,
                         dots: [[rows, cols], [rows+1, cols+1], [rows+2, cols+2], [rows+3, cols+3], [rows+4, cols+4]]
                     };
@@ -112,12 +116,22 @@ function checkWinner(dots, size) {
                     dots[rows + 3][cols - 3].state === val &&
                     dots[rows + 4][cols - 4].state === val) {
                     return {
+                        draw: false,
                         winner: val,
                         dots: [[rows, cols], [rows+1, cols-1], [rows+2, cols-2], [rows+3, cols-3], [rows+4, cols-4]]
                     };
                 }
+            } else {
+                draw = false;
             }
         }
+    }
+    if (draw) {
+        return {
+            draw,
+            winner: null,
+            dots: null
+        };
     }
     return false;
 }
@@ -304,7 +318,7 @@ Meteor.methods({
         dots[row][col].state = board.whiteIsNext ? 'white' : 'black';
         Boards.update(gameId, {
             $set: {
-                dots: dots,
+                dots,
                 whiteIsNext: !board.whiteIsNext,
                 last: row + '-' + col
             },
@@ -312,23 +326,25 @@ Meteor.methods({
 
         const checkWin = checkWinner(dots, board.size);
         if (checkWin) {
-            let winner = checkWin.winner;
             let winnerIsAuthor = null;
-            let winDots = checkWin.dots;
 
-            winnerIsAuthor = (winner === 'white') ? (board.creatorIsWhite === true) : (board.creatorIsWhite === false);
-            dots[winDots[0][0]][winDots[0][1]].win = true;
-            dots[winDots[1][0]][winDots[1][1]].win = true;
-            dots[winDots[2][0]][winDots[2][1]].win = true;
-            dots[winDots[3][0]][winDots[3][1]].win = true;
-            dots[winDots[4][0]][winDots[4][1]].win = true;
+            if (!checkWin.draw) {
+                let winner = checkWin.winner;
+                let winDots = checkWin.dots;
 
+                winnerIsAuthor = (winner === 'white') ? (board.creatorIsWhite === true) : (board.creatorIsWhite === false);
+                dots[winDots[0][0]][winDots[0][1]].win = true;
+                dots[winDots[1][0]][winDots[1][1]].win = true;
+                dots[winDots[2][0]][winDots[2][1]].win = true;
+                dots[winDots[3][0]][winDots[3][1]].win = true;
+                dots[winDots[4][0]][winDots[4][1]].win = true;
+            }
             Boards.update(gameId, {
                 $set: {
                     dots,
                     end: true,
                     winnerIsAuthor,
-                    draw: false
+                    draw: checkWin.draw
                 },
             });
         }

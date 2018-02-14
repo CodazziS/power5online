@@ -12,7 +12,9 @@ export default class LastGame extends Component {
             userId = Meteor.user()._id;
         }
 
-        if (game.authorId === userId && game.winnerIsAuthor ||
+        if (game.draw) {
+            result = 'drawTrophy';
+        } else if (game.authorId === userId && game.winnerIsAuthor ||
             game.opponentId === userId && !game.winnerIsAuthor) {
             result = 'winnerTrophy';
         } else if (game.authorId === userId && !game.winnerIsAuthor ||

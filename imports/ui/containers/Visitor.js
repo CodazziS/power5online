@@ -46,7 +46,7 @@ class Visitor extends Component {
                                     <div className="scoreboardPlayerWhite"></div>
                                 </div>
                                 <div className="scoreboardPlayerName">
-                                    <span className={(current.end && ((current.winnerIsAuthor && current.creatorIsWhite) || (!current.winnerIsAuthor && !current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
+                                    <span className={(current.end && !current.draw && ((current.winnerIsAuthor && current.creatorIsWhite) || (!current.winnerIsAuthor && !current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
                                     {(current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}
                                 </div>
                             </div>
@@ -60,7 +60,7 @@ class Visitor extends Component {
                                     <div className="scoreboardPlayerBlack"></div>
                                 </div>
                                 <div className="scoreboardPlayerName">
-                                    <span className={(current.end && ((current.winnerIsAuthor && !current.creatorIsWhite) || (!current.winnerIsAuthor && current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
+                                    <span className={(current.end && !current.draw && ((current.winnerIsAuthor && !current.creatorIsWhite) || (!current.winnerIsAuthor && current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
                                     {(!current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}
                                 </div>
                             </div>
