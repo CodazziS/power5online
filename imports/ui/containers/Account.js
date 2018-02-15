@@ -26,7 +26,6 @@ class Account extends Component {
 
     render() {
         const T = i18n.createComponent();
-        console.log(this.props.account);
 
         if (!this.props.account || !this.props.account[0]) {
             return (<Panel type='warn' text='ACCOUNT_LOADING' />);

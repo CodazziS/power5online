@@ -1,3 +1,5 @@
+/*global Push*/
+/*eslint no-undef: "error"*/
 import React, { Component } from 'react';
 
 import { FlowRouter } from 'meteor/kadira:flow-router';
@@ -118,10 +120,7 @@ class Game extends Component {
                 body: i18n.__('MY_ROUND_TXT'),
                 icon: '/favicon-b.png',
                 timeout: 6,
-                onClick: function () {
-                    window.focus();
-                    this.close();
-                }
+                onClick() {window.focus(); this.close();}
             });
         }
     }
@@ -154,7 +153,7 @@ class Game extends Component {
         if (this.isMyTurn()) {
             document.title = i18n.__('MY_ROUND');
             if (this.props.account[0] && this.props.account[0].allowNotification) {
-                Meteor.setTimeout(() => this.sendNotification(current.lastActionAt), 5000)
+                Meteor.setTimeout(() => this.sendNotification(current.lastActionAt), 30000);
             }
         }
         if (!current.end) {
