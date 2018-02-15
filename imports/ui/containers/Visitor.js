@@ -8,6 +8,7 @@ import { Meteor } from 'meteor/meteor';
 import Board from './parts/Board.js';
 import Panel from './components/Panel.js';
 import Header from './components/Header.js';
+import Footer from './components/Footer.js';
 
 class Visitor extends Component {
 
@@ -75,6 +76,7 @@ class Visitor extends Component {
                         />
                     </div>
                 </div>
+                <Footer />
             </div>
         );
     }

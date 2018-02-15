@@ -10,6 +10,8 @@ import Board from './parts/Board.js';
 import Header from './components/Header.js';
 import Panel from './components/Panel.js';
 import ToggleButton from './components/ToggleButton.js';
+import Button from './components/Button.js';
+import Footer from './components/Footer.js';
 
 class Game extends Component {
 
@@ -22,10 +24,11 @@ class Game extends Component {
         Meteor.call('boards.addDot', this.props.board._id, rowcol[0], rowcol[1], localStorage.getItem('guest_id'));
     }
 
-    getCurrentUser(guestId) {
+    getCurrentUser() {
         let userId = null;
         let userName = null;
         let userType = null;
+        let guestId = localStorage.getItem('guest_id');
 
         if (Meteor.user()) {
             userId = Meteor.user()._id;
@@ -59,22 +62,23 @@ class Game extends Component {
     }
 
     checkReplay(board) {
-        let userId = null;
-        let guest = localStorage.getItem('guest_id');
+        let countReplay = 0;
+        let currentUser = this.getCurrentUser();
 
         if (board.replayId) {
-            if (Meteor.user()) {
-                userId = Meteor.user()._id;
-            } else {
-                userId = guest;
-            }
-
-            if ((board.authorReplay && (board.authorId === guest || board.authorId === userId)) ||
-                (board.opponentReplay && (board.opponentId === guest || board.opponentId === userId))){
+            if ((board.authorReplay && (board.authorId === currentUser.userId)) ||
+                (board.opponentReplay && (board.opponentId === currentUser.userId))) {
                 Meteor.call('boards.replayAccepted', this.props.board._id, localStorage.getItem('guest_id'));
                 FlowRouter.go('game.show', {_id: board.replayId});
             }
         }
+        if (board.authorReplay) {
+            countReplay++;
+        }
+        if (board.opponentReplay) {
+            countReplay++;
+        }
+        return countReplay;
     }
 
     isMyTurn() {
@@ -108,8 +112,25 @@ class Game extends Component {
         );
     }
 
+    sendNotification(lastAction) {
+        if (this.props.board.lastActionAt === lastAction) {
+            Push.create(i18n.__('APP_TITLE'), {
+                body: i18n.__('MY_ROUND_TXT'),
+                icon: '/favicon-b.png',
+                timeout: 6,
+                onClick: function () {
+                    window.focus();
+                    this.close();
+                }
+            });
+        }
+    }
+
     render() {
         const T = i18n.createComponent();
+        const currentUser = this.getCurrentUser();
+        let replayCount = 0;
+        let replayButton = '';
 
         if (!this.props.board) {
             return (<Panel type='warn' text='GAME_LOADING' />);
@@ -123,27 +144,25 @@ class Game extends Component {
                 <Panel type='error' text='GAME_FULL' />
             );
         }
+        if (!this.props.board.opponentId && this.props.board.authorId !== currentUser.userId) {
+            Meteor.call('boards.setOpponent', this.props.board._id, localStorage.getItem('guest_id'));
+        }
 
         const current = this.props.board;
         document.title = current.game;
 
         if (this.isMyTurn()) {
             document.title = i18n.__('MY_ROUND');
-            // Push.create(i18n.__('APP_TITLE'), {
-            //     body: i18n.__('MY_ROUND_TXT'),
-            //     icon: '/favicon-b.png',
-            //     timeout: 6,
-            //     onClick: function () {
-            //         window.focus();
-            //         this.close();
-            //     }
-            // });
+            if (this.props.account[0] && this.props.account[0].allowNotification) {
+                Meteor.setTimeout(() => this.sendNotification(current.lastActionAt), 5000)
+            }
         }
         if (!current.end) {
             this.changeFavicon((current.whiteIsNext ? '/favicon-w' : '/favicon-b'));
         } else {
             this.changeFavicon('/favicon');
-            this.checkReplay(current);
+            replayCount = this.checkReplay(current);
+            replayButton = <Button text={i18n.__('REPLAY') + '(' + replayCount + '/2)' } onClick={(current) => this.replay(current)} />;
         }
 
         return (
@@ -179,6 +198,8 @@ class Game extends Component {
                             </div>
                             <ToggleButton
                                 check={current.private}
+                                checkOnText='GAME_PRIVATE'
+                                checkOffText='GAME_PUBLIC'
                                 onClick={() => this.switchPrivate()}
                             />
                             <span><T>VISITOR_LINK</T></span>
@@ -188,8 +209,7 @@ class Game extends Component {
                                 defaultValue={document.location.host + '/visitor/' + current._id}
                                 disabled
                             />
-                            <button onClick={(current) => this.replay(current)}><T>REPLAY</T></button>
-
+                            { replayButton }
                         </div>
                     </div>
                     <div id="gameBoard" className="game-board">
@@ -201,6 +221,7 @@ class Game extends Component {
                         />
                     </div>
                 </div>
+                <Footer />
             </div>
         );
     }
@@ -209,8 +230,10 @@ class Game extends Component {
 export default withTracker(() => {
     Meteor.subscribe('myGames', localStorage.getItem('guest_id'));
     Meteor.subscribe('gameAuthorization', localStorage.getItem('guest_id'), FlowRouter.getParam('_id'));
+    Meteor.subscribe('myAccount');
 
     return {
-        board: Boards.findOne(FlowRouter.getParam('_id'))
+        board: Boards.findOne(FlowRouter.getParam('_id')),
+        account: Meteor.users.find().fetch(),
     };
 })(Game);

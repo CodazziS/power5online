@@ -69,7 +69,7 @@ function getCurrentUser(guestId) {
 
 function checkUserEditAction(game, guestId) {
     const user = getCurrentUser(guestId);
-    if (game.authorId === user.userId || game.opponentId === user.userId) {
+    if (game.authorId === user.userId || game.opponentId === user.userId || game.opponentId === null) {
         return;
     }
     throw new Meteor.Error('user-not-allowed');
@@ -265,7 +265,7 @@ Meteor.methods({
                 game: board.game,
                 dots: dotsGeneration(board.size),
                 whiteIsNext: true,
-                creatorIsWhite: (Math.floor(Math.random() * Math.floor(2)) === 1),
+                creatorIsWhite: !board.creatorIsWhite,
                 authorType: board.authorType,
                 authorId: board.authorId,
                 authorUsername: board.authorUsername,
@@ -278,7 +278,8 @@ Meteor.methods({
                 end: false,
                 winnerIsAuthor: false,
                 draw: false,
-                replayId: null
+                replayId: null,
+                private: board.private
             });
             Boards.update(gameId, {
                 $set: {
@@ -293,22 +294,23 @@ Meteor.methods({
         const currentUser = getCurrentUser(guest);
 
         checkUserEditAction(board, guest);
-        if ((board.authorId === currentUser.userId || board.authorId === guest) &&
-            !board.authorReplay && board.replayId) {
+        if (board.authorId === currentUser.userId && board.authorReplay && board.replayId) {
             Boards.update(gameId, {
                 $set: {
-                    authorReplay: null,
+                    authorReplay: false,
                 },
             });
+            return true;
         }
-        if ((board.opponentId === currentUser.userId || board.opponentId === guest) &&
-            !board.opponentReplay && board.replayId) {
+        if (board.opponentId === currentUser.userId && board.opponentReplay && board.replayId) {
             Boards.update(gameId, {
                 $set: {
-                    opponentReplay: null,
+                    opponentReplay: false,
                 },
             });
+            return true;
         }
+        return false;
     },
 
     'boards.addDot'(gameId, row, col, guest) {

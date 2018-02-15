@@ -12,7 +12,7 @@ export default class ToggleButton extends React.Component {
                     <span className={'toggleButtonSlider' + (this.props.check ? ' checked' : '')}></span>
                 </label>
                 <span className="toggleButtonLabel">
-                    <T>{this.props.check ? 'GAME_PRIVATE' : 'GAME_PUBLIC'}</T>
+                    <T>{this.props.check ? this.props.checkOnText : this.props.checkOffText}</T>
                 </span>
             </div>
         );
