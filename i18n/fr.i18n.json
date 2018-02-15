@@ -27,5 +27,9 @@
   "GAME_FULL": "Ce jeu est déjà complet",
   "VISITOR_LINK": "Lien visiteur : ",
   "REPLAY": "Rejouer",
+  "MY_ACCOUNT": "Mon compte",
+  "SETTINGS_TITLE": "Mes préférences",
+  "NOTIFICATION_ENABLE": "Les notifications sont activées",
+  "NOTIFICATION_DISABLE": "Les notifications sont désactivées",
   "GO_TO_HOME": "Retour à l'accueil"
 }

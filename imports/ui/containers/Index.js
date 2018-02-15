@@ -10,6 +10,7 @@ import { Boards } from '../../api/boards.js';
 import LaunchedGame from './parts/LaunchedGame.js';
 import LastGame from './parts/LastGame.js';
 import Header from './components/Header.js';
+import Footer from './components/Footer.js';
 
 class App extends Component {
 
@@ -147,6 +148,7 @@ class App extends Component {
                         </table>
                     </div>
                 </div>
+                <Footer />
             </div>
         );
     }

@@ -6,6 +6,7 @@ import i18n from 'meteor/universe:i18n';
 import Index from '../imports/ui/containers/Index.js';
 import Game from '../imports/ui/containers/Game.js';
 import Visitor from '../imports/ui/containers/Visitor.js';
+import Account from '../imports/ui/containers/Account.js';
 import '../imports/startup/accounts-config.js';
 
 
@@ -59,6 +60,16 @@ FlowRouter.route('/visitor/:_id', {
     action() {
         mount(Visitor, {
             main: <Visitor/>,
+        });
+    },
+});
+
+/* Account */
+FlowRouter.route('/my-account', {
+    name: 'account.edit',
+    action() {
+        mount(Account, {
+            main: <Account/>,
         });
     },
 });
