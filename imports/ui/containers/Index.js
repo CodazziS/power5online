@@ -86,7 +86,9 @@ class App extends Component {
                     title="APP_TITLE"
                 />
                 <div className="content">
-                    <div id="newGameBlock">
+
+                    {/************** NEW GAME *************/}
+                    <div id="newGameBlock" className="home_box">
                         <h2><T>CREATE_NEW_GAME</T></h2><br />
                         <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
                             <strong><T>NEW_GAME_NAME</T></strong>
@@ -114,38 +116,44 @@ class App extends Component {
                             <input type="submit" value={i18n.__('NEW_GAME_SUBMIT')}/>
                         </form>
                     </div>
-                    <div id="gamesStats">
+
+                    {/*************** GAME STATS ********************/}
+                    <div id="gamesStats" className="home_box">
                         <h2><T>STATS_TITLE</T></h2><br />
-                        <table>
-                            <tbody>
-                            <tr><th>&#x1F3C6; <T>GAMES_WIN</T> : </th><td>{this.props.winGames}</td></tr>
-                            <tr><th>&#x0274C; <T>GAMES_LOSE</T> : </th><td>{this.props.loseGames}</td></tr>
-                            <tr><th>&#x1F3F3; &nbsp;&nbsp;<T>GAMES_DRAW</T> : </th><td>{this.props.drawGames}</td></tr>
-                            </tbody>
-                        </table>
+
+                        <div className="home_box_row">
+                            <div className="home_box_col40 winnerTrophy"></div>
+                            <div className="home_box_col230"> <T>GAMES_WIN</T></div>
+                            <div className="home_box_col90 alright">{this.props.winGames}</div>
+                        </div>
+                        <div className="home_box_row">
+                            <div className="home_box_col40 loserTrophy"></div>
+                            <div className="home_box_col230"> <T>GAMES_LOSE</T></div>
+                            <div className="home_box_col90 alright">{this.props.loseGames}</div>
+                        </div>
+                        <div className="home_box_row">
+                            <div className="home_box_col40 drawTrophy"></div>
+                            <div className="home_box_col230"> <T>GAMES_DRAW</T></div>
+                            <div className="home_box_col90 alright">{this.props.drawGames}</div>
+                        </div>
                     </div>
-                    <div id="gamesLaunched">
+
+                    {/*********** LAUNCHED GAMES ***************/}
+                    <div id="gamesLaunched" className="home_box">
                         <h2><T>STATS_LAUNCHED</T></h2><br />
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>&nbsp;</th>
-                                    <th><T>OPPONENT</T></th>
-                                    <th>&nbsp;</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {this.renderLaunchedGames()}
-                            </tbody>
-                        </table>
+
+                        <div className="home_box_row">
+                            <div className="home_box_col125">&nbsp;</div>
+                            <div className="home_box_col125"><strong><T>OPPONENT</T></strong></div>
+                            <div className="home_box_col110">&nbsp;</div>
+                        </div>
+                        {this.renderLaunchedGames()}
                     </div>
-                    <div id="lastGames">
+
+                    {/*********** LASTS GAMES ***************/}
+                    <div id="lastGames" className="home_box">
                         <h2><T>GAMES_LASTS</T></h2><br />
-                        <table>
-                            <tbody>
-                            {this.renderLastGames()}
-                            </tbody>
-                        </table>
+                        {this.renderLastGames()}
                     </div>
                 </div>
                 <Footer />

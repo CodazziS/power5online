@@ -31,5 +31,11 @@
   "SETTINGS_TITLE": "Mes préférences",
   "NOTIFICATION_ENABLE": "Les notifications sont activées",
   "NOTIFICATION_DISABLE": "Les notifications sont désactivées",
+  "BUTTON_REPLAY_VISITOR": "Suivre les joueurs",
+  "BUTTON_REPLAY_NEXT_GAME": "Aller à la partie suivante",
+  "BUTTON_REPLAY": "Demander à rejouer",
+  "BUTTON_REPLAY_OPPONENT": "Votre adversaire veut rejouer",
+  "BUTTON_REPLAY_PROPOSED": "Vous avez proposé de rejouer",
+  "BUTTON_CANCEL_GAME": "Annuler la partie",
   "GO_TO_HOME": "Retour à l'accueil"
 }

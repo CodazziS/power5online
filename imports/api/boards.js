@@ -26,9 +26,6 @@ if (Meteor.isServer) {
     Meteor.publish('gameVisitor', function (guestId, gameId) {
         return Boards.find(
             {_id: gameId, private: false},
-            {
-                fields: {authorReplay: 0, opponentReplay: 0, replayId: 0}
-            }
         );
     });
 }
@@ -186,18 +183,20 @@ Meteor.methods({
             authorType: currentUser.userType,
             authorId: currentUser.userId,
             authorUsername: currentUser.userName,
-            authorReplay: false,
             opponentType,
             opponentId,
             opponentUsername,
-            opponentReplay: false,
             createdAt: new Date(),
             end: false,
             winnerIsAuthor: false,
             draw: false,
             replayId: null,
             lastActionAt: null,
-            private: true
+            private: true,
+            //actions
+            askReplay: null,
+            askNull: null,
+            step: 0
         });
     },
 
@@ -231,6 +230,15 @@ Meteor.methods({
         });
     },
 
+    'boards.cancel'(gameId, guest) {
+        const board = Boards.findOne(gameId);
+
+        check(gameId, String);
+        checkUserEditAction(board, guest);
+
+        Boards.remove(gameId);
+    },
+
     'boards.replay'(gameId, guest) {
         const board = Boards.findOne(gameId);
         const currentUser = getCurrentUser(guest);
@@ -240,26 +248,14 @@ Meteor.methods({
         if (!board.end) {
             return;
         }
-        if ((board.authorId === currentUser.userId || board.authorId === guest) &&
-            !board.authorReplay && !board.replayId) {
-            board.authorReplay = true;
-            Boards.update(gameId, {
-                $set: {
-                    authorReplay: true,
-                },
-            });
-        }
-        if ((board.opponentId === currentUser.userId || board.opponentId === guest) &&
-            !board.opponentReplay && !board.replayId) {
-            board.opponentReplay = true;
-            Boards.update(gameId, {
-                $set: {
-                    opponentReplay: true,
-                },
-            });
-        }
 
-        if (board.authorReplay && board.opponentReplay && !board.replayId) {
+        if (!board.askReplay) {
+            Boards.update(gameId, {
+                $set: {
+                    askReplay: currentUser.userId,
+                },
+            });
+        } else if (board.askReplay !== currentUser.userId) {
             const newId = Boards.insert({
                 size: board.size,
                 game: board.game,
@@ -279,7 +275,8 @@ Meteor.methods({
                 winnerIsAuthor: false,
                 draw: false,
                 replayId: null,
-                private: board.private
+                private: board.private,
+                step: 0
             });
             Boards.update(gameId, {
                 $set: {
@@ -287,30 +284,6 @@ Meteor.methods({
                 },
             });
         }
-    },
-
-    'boards.replayAccepted'(gameId, guest) {
-        const board = Boards.findOne(gameId);
-        const currentUser = getCurrentUser(guest);
-
-        checkUserEditAction(board, guest);
-        if (board.authorId === currentUser.userId && board.authorReplay && board.replayId) {
-            Boards.update(gameId, {
-                $set: {
-                    authorReplay: false,
-                },
-            });
-            return true;
-        }
-        if (board.opponentId === currentUser.userId && board.opponentReplay && board.replayId) {
-            Boards.update(gameId, {
-                $set: {
-                    opponentReplay: false,
-                },
-            });
-            return true;
-        }
-        return false;
     },
 
     'boards.addDot'(gameId, row, col, guest) {
@@ -338,6 +311,7 @@ Meteor.methods({
                 whiteIsNext: !board.whiteIsNext,
                 last: row + '-' + col,
                 lastActionAt: new Date(),
+                step: board.step + 1
             },
         });
 

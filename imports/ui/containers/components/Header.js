@@ -9,11 +9,13 @@ export default class Header extends React.Component {
 
         return (
             <header>
-                <h1><a href="/"><T>{this.props.title}</T></a></h1>
-                <AccountsUIWrapper />
-                <span className="account_box">
+                <div className="header_title">
+                    <h1><a href="/"><T>{this.props.title}</T></a></h1>
+                </div>
+                <div className="header_account">
+                    <AccountsUIWrapper />
                     <a href="/my-account">{Meteor.user() ? 'Mon compte' : '' }</a>
-                </span>
+                </div>
             </header>
         );
     }

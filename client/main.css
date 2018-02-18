@@ -24,6 +24,9 @@ a {
     text-decoration: none;
     color: initial;
 }
+.alright {
+    text-align: right;
+}
 header {
     background: #d2edf4;
     background-image: linear-gradient(to bottom, #d0edf5, #e1e5f0 100%);
@@ -85,30 +88,62 @@ input.disableInput {
     flex-wrap: wrap;
     margin-bottom: 50px;
 }
-#newGameBlock, #gamesLaunched, #gamesStats, #lastGames {
-    width: 350px;
+
+/******** HOME ********/
+.home_box {
+    width: 360px;
     background-color: white;
     box-shadow: 2px 2px 8px black;
     padding: 20px;
     margin-bottom: 20px;
 }
-#gamesLaunched table, #lastGames table {
+.home_box_row {
     width: 100%;
 }
-#gamesStats table {
-    width: 100%;
+.home_box_row div {
+    display: inline-block;
+    word-wrap: break-word;
+    white-space: pre-wrap;
+}
+.home_box_col40 {
+    width: 40px;
+}
+.home_box_col90 {
+    width: 90px;
+}
+.home_box_col110 {
+    width: 110px;
+}
+.home_box_col115 {
+    width: 115px;
+}
+.home_box_col125 {
+    width: 125px;
+}
+.home_box_col230 {
+    width: 230px;
+}
+
+#gamesStats .home_box_row {
     font-size: 24px;
     text-align: left;
+    font-weight: bold;
+    line-height: 36px;
 }
-#gamesStats td {
+#gamesStats .alright {
     font-size: 36px;
-    text-align: right;
 }
+#gamesLaunched .home_box_row{
+    vertical-align: middle;
+}
+/******************/
+
+
 .gameContainer {
-    height: 90vh;
-    width: 90vh;
-    max-height: calc(100vw - 50px);
-    max-width: calc(100vw - 50px);
+    height: calc(90vh - 20px);
+    width: calc(90vh - 20px);
+    max-height: calc(100vw - 20px);
+    max-width: calc(100vw - 20px);
     flex-direction: column;
     display: flex;
     align-content: stretch;
@@ -339,7 +374,16 @@ footer img {
 .panel .warn {
     color: yellowgreen;
 }
-
+/************ HEADER ********/
+.header_title {
+    display: inline-block;
+    width: calc(100% - 250px);
+}
+.header_account {
+    display: inline-block;
+    text-align: right;
+    width: 250px;
+}
 /*********** ACCOUNT *******/
 .account_content {
     padding: 20px;

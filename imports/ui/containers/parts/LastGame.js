@@ -30,12 +30,14 @@ export default class LastGame extends Component {
             opponent = game.authorUsername;
         }
         return (
-            <tr>
-                <td><strong className={result}></strong></td>
-                <td><strong>{game.game}</strong></td>
-                <td>{opponent}</td>
-                <td><button onClick={this.props.onClick.bind(this)}><T>BTN_REVIEW</T></button></td>
-            </tr>
+            <div className="home_box_row">
+                <div className="home_box_col40"><span className={result}></span></div>
+                <div className="home_box_col115">{game.game}</div>
+                <div className="home_box_col115"><strong>{opponent}</strong></div>
+                <div className="home_box_col90">
+                    <button onClick={this.props.onClick.bind(this)}><T>BTN_REVIEW</T></button>
+                </div>
+            </div>
         );
     }
 }
