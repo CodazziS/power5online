@@ -68,6 +68,14 @@ class Game extends Component {
         }
     }
 
+    abordButton() {
+        let board = this.props.board;
+
+        if (!board.end) {
+            Meteor.call('boards.abord', this.props.board._id, localStorage.getItem('guest_id'));
+        }
+    }
+
     replayButton() {
         let board = this.props.board;
         let currentUser = this.getCurrentUser();
@@ -145,6 +153,8 @@ class Game extends Component {
         const currentUser = this.getCurrentUser();
         let replayButton = '';
         let cancelButton = '';
+        let abortButton = '';
+        let winButton = '';
 
         if (!this.props.board) {
             return (<Panel type='warn' text='GAME_LOADING' />);
@@ -180,6 +190,12 @@ class Game extends Component {
 
         if (current.step < 2) {
             cancelButton = <Button text="BUTTON_CANCEL_GAME" onClick={(current) => this.cancelButton(current)} />;
+        } else if (!current.end) {
+            if (!this.isMyTurn() && (current.lastActionAt.getTime() < ((new Date()).getTime() - 1000 * 3600 * 24))) {
+                winButton = <Button text="BUTTON_FINISH_GAME" classname="bluebutton" onClick={(current) => this.winButton(current)} />;
+            } else {
+                abortButton = <Button text="BUTTON_ABORT_GAME" classname="redbutton" onClick={(current) => this.abordButton(current)} />;
+            }
         }
 
         return (
@@ -228,6 +244,8 @@ class Game extends Component {
                             />
                             { replayButton }
                             { cancelButton }
+                            { abortButton }
+                            { winButton }
                         </div>
                     </div>
                     <div id="gameBoard" className="game-board">

@@ -53,7 +53,18 @@ input[type=submit], button {
     border-radius: 4px;
     cursor: pointer;
 }
-
+button.redbutton {
+    background-color: indianred;
+}
+button.redbutton:hover {
+    background-color: darkred;
+}
+button.bluebutton {
+    background-color: skyblue;
+}
+button.bluebutton:hover {
+    background-color: darkblue;
+}
 input[type=submit]:hover, button:hover {
     background-color: #45a049;
 }

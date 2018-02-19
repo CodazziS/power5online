@@ -190,7 +190,7 @@ export default withTracker(() => {
                         {opponentId: userId}
                     ]}
             ]},
-            {sort:{lastActionAt: -1, createdAt: -1}, limit: 10}
+            {sort:{lastActionAt: -1, createdAt: -1}, limit: 5}
             ).fetch(),
 
         winGames: Boards.find({

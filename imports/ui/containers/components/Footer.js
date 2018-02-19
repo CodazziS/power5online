@@ -13,7 +13,6 @@ export default class Footer extends React.Component {
                 <a target="_blank" href="https://gitlab.com/stephane.codazzi/power5online">
                     <img src="/open-sources.png" />
                 </a>
-                V{Migrations.getVersion()}
             </footer>
         );
     }

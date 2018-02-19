@@ -239,6 +239,60 @@ Meteor.methods({
         Boards.remove(gameId);
     },
 
+    'boards.win'(gameId, guest) {
+        const board = Boards.findOne(gameId);
+        const currentUser = getCurrentUser(guest);
+        let winnerIsAuthor = false;
+
+        check(gameId, String);
+        checkUserEditAction(board, guest);
+
+        if (currentUser.userId === board.authorId) {
+            winnerIsAuthor = true
+        }
+
+        if (board.lastActionAt.getTime() < ((new Date()).getTime() - 1000 * 3600 * 24)) {
+            if ((winnerIsAuthor && (!board.whiteIsNext && board.creatorIsWhite) || (board.whiteIsNext && !board.creatorIsWhite)) ||
+                (!winnerIsAuthor && (board.whiteIsNext && board.creatorIsWhite) || (!board.whiteIsNext && !board.creatorIsWhite))) {
+                Boards.update(gameId, {
+                    $set: {
+                        end: true,
+                        winnerIsAuthor,
+                        draw: false
+                    },
+                });
+                return;
+            }
+        }
+        throw new Meteor.Error('action-not-permited');
+    },
+
+    'boards.abord'(gameId, guest) {
+        const board = Boards.findOne(gameId);
+        const currentUser = getCurrentUser(guest);
+
+        check(gameId, String);
+        checkUserEditAction(board, guest);
+
+        if (currentUser.userId === board.authorId) {
+            Boards.update(gameId, {
+                $set: {
+                    end: true,
+                    winnerIsAuthor: false,
+                    draw: false
+                },
+            });
+        } else if (currentUser.userId === board.opponentId) {
+            Boards.update(gameId, {
+                $set: {
+                    end: true,
+                    winnerIsAuthor: true,
+                    draw: false
+                },
+            });
+        }
+    },
+
     'boards.replay'(gameId, guest) {
         const board = Boards.findOne(gameId);
         const currentUser = getCurrentUser(guest);
