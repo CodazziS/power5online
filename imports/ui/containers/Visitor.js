@@ -47,7 +47,6 @@ class Visitor extends Component {
         if (current.replayId) {
             replayButton = <Button text="BUTTON_REPLAY_VISITOR" onClick={(current) => this.replayButton(current)}/>;
         }
-        console.log(current);
         return (
             <div className="container">
                 <Header

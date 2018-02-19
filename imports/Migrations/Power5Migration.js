@@ -1,46 +1,6 @@
 import {Meteor} from 'meteor/meteor';
 import {Boards} from '../api/boards.js';
-
-export default class Power5Migration {
-
-    constructor() {
-        if (Meteor.isServer) {
-            Migrations.add({
-                version: 1,
-                name: 'Add step filed to games',
-                up: function () {
-                    let boards = Boards.find().fetch();
-                    let i = 0;
-                    for (i in boards) {
-                        if (boards.hasOwnProperty(i)) {
-                            Boards.update(boards[i]._id, {
-                                $set: {
-                                    step: countStep(boards[i].dots, boards[i].size)
-                                },
-                            });
-                        }
-                    }
-                },
-                down: function () {
-                    let boards = Boards.find().fetch();
-                    let i = 0;
-                    for (i in boards) {
-                        if (boards.hasOwnProperty(i)) {
-                            Boards.update(boards[i]._id, {
-                                $set: {
-                                    step: null
-                                },
-                            });
-                        }
-                    }
-                }
-            });
-            console.log("Current migration verion : " + Migrations.getVersion());
-            Migrations.migrateTo('latest');
-        }
-
-    }
-}
+import { Migrations } from 'meteor/percolate:migrations';
 
 function countStep(dots, size) {
     let count = 0;
@@ -55,4 +15,44 @@ function countStep(dots, size) {
         }
     }
     return count;
+}
+
+export default class Power5Migration {
+
+    constructor() {
+        if (Meteor.isServer) {
+            Migrations.add({
+                version: 1,
+                name: 'Add step filed to games',
+                up () {
+                    let boards = Boards.find().fetch();
+                    let i = 0;
+                    for (i in boards) {
+                        if (boards.hasOwnProperty(i)) {
+                            Boards.update(boards[i]._id, {
+                                $set: {
+                                    step: countStep(boards[i].dots, boards[i].size)
+                                },
+                            });
+                        }
+                    }
+                },
+                down () {
+                    let boards = Boards.find().fetch();
+                    let i = 0;
+                    for (i in boards) {
+                        if (boards.hasOwnProperty(i)) {
+                            Boards.update(boards[i]._id, {
+                                $set: {
+                                    step: null
+                                },
+                            });
+                        }
+                    }
+                }
+            });
+            Migrations.migrateTo('latest');
+        }
+
+    }
 }

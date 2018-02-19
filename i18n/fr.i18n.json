@@ -37,5 +37,7 @@
   "BUTTON_REPLAY_OPPONENT": "Votre adversaire veut rejouer",
   "BUTTON_REPLAY_PROPOSED": "Vous avez proposé de rejouer",
   "BUTTON_CANCEL_GAME": "Annuler la partie",
+  "BUTTON_FINISH_GAME": "Gagner la partie par forfait",
+  "BUTTON_ABORT_GAME": "Abandonner la partie",
   "GO_TO_HOME": "Retour à l'accueil"
 }
