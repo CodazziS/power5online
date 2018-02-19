@@ -22,7 +22,7 @@
   "GAMES_DRAW": "Parties nulles",
   "STATS_LAUNCHED": "Mes parties en cours",
   "OPPONENT": "Opposant",
-  "GAMES_LASTS": "Mes 10 dernières parties",
+  "GAMES_LASTS": "Mes dernières parties",
   "GAME_LOADING": "Chargement du plateau en cours",
   "GAME_FULL": "Ce jeu est déjà complet",
   "VISITOR_LINK": "Lien visiteur : ",
@@ -31,5 +31,13 @@
   "SETTINGS_TITLE": "Mes préférences",
   "NOTIFICATION_ENABLE": "Les notifications sont activées",
   "NOTIFICATION_DISABLE": "Les notifications sont désactivées",
+  "BUTTON_REPLAY_VISITOR": "Suivre les joueurs",
+  "BUTTON_REPLAY_NEXT_GAME": "Aller à la partie suivante",
+  "BUTTON_REPLAY": "Demander à rejouer",
+  "BUTTON_REPLAY_OPPONENT": "Votre adversaire veut rejouer",
+  "BUTTON_REPLAY_PROPOSED": "Vous avez proposé de rejouer",
+  "BUTTON_CANCEL_GAME": "Annuler la partie",
+  "BUTTON_FINISH_GAME": "Gagner la partie par forfait",
+  "BUTTON_ABORT_GAME": "Abandonner la partie",
   "GO_TO_HOME": "Retour à l'accueil"
 }

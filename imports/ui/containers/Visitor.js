@@ -9,6 +9,7 @@ import Board from './parts/Board.js';
 import Panel from './components/Panel.js';
 import Header from './components/Header.js';
 import Footer from './components/Footer.js';
+import Button from './components/Button.js';
 
 class Visitor extends Component {
 
@@ -19,6 +20,14 @@ class Visitor extends Component {
 
     handleClick() {
         return;
+    }
+
+    replayButton() {
+        let board = this.props.board;
+
+        if (board.replayId) {
+            FlowRouter.go('game.show', {_id: board.replayId});
+        }
     }
 
     render() {
@@ -32,8 +41,12 @@ class Visitor extends Component {
         }
 
         const current = this.props.board;
-        document.title = current.game;
+        let replayButton = '';
 
+        document.title = current.game;
+        if (current.replayId) {
+            replayButton = <Button text="BUTTON_REPLAY_VISITOR" onClick={(current) => this.replayButton(current)}/>;
+        }
         return (
             <div className="container">
                 <Header
@@ -50,6 +63,7 @@ class Visitor extends Component {
                                     <span className={(current.end && !current.draw && ((current.winnerIsAuthor && current.creatorIsWhite) || (!current.winnerIsAuthor && !current.creatorIsWhite))) ? 'winnerTrophy' : ''}></span>
                                     {(current.creatorIsWhite) ? current.authorUsername : current.opponentUsername}
                                 </div>
+                                { replayButton }
                             </div>
 
                             <hr className="scoreboardSeparator"></hr>

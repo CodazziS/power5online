@@ -59,28 +59,51 @@ class Game extends Component {
         document.head.appendChild(linkpng);
     }
 
-    replay() {
-        Meteor.call('boards.replay', this.props.board._id, localStorage.getItem('guest_id'));
+    cancelButton() {
+        let board = this.props.board;
+
+        if (board.step < 2) {
+            Meteor.call('boards.cancel', this.props.board._id, localStorage.getItem('guest_id'));
+            FlowRouter.go('Index');
+        }
     }
 
-    checkReplay(board) {
-        let countReplay = 0;
+    abordButton() {
+        let board = this.props.board;
+
+        if (!board.end) {
+            Meteor.call('boards.abord', this.props.board._id, localStorage.getItem('guest_id'));
+        }
+    }
+
+    replayButton() {
+        let board = this.props.board;
         let currentUser = this.getCurrentUser();
 
         if (board.replayId) {
-            if ((board.authorReplay && (board.authorId === currentUser.userId)) ||
-                (board.opponentReplay && (board.opponentId === currentUser.userId))) {
-                Meteor.call('boards.replayAccepted', this.props.board._id, localStorage.getItem('guest_id'));
-                FlowRouter.go('game.show', {_id: board.replayId});
-            }
+            FlowRouter.go('game.show', {_id: board.replayId});
+            return;
         }
-        if (board.authorReplay) {
-            countReplay++;
+        if (!board.askReplay || board.askReplay !== currentUser.userId) {
+            Meteor.call('boards.replay', this.props.board._id, localStorage.getItem('guest_id'));
         }
-        if (board.opponentReplay) {
-            countReplay++;
+    }
+
+    checkReplay(board) {
+        let currentUser = this.getCurrentUser();
+
+        if (board.replayId) {
+            return 'BUTTON_REPLAY_NEXT_GAME';
         }
-        return countReplay;
+        if (!board.askReplay) {
+            return 'BUTTON_REPLAY';
+        }
+        if (board.askReplay !== currentUser.userId) {
+            return 'BUTTON_REPLAY_OPPONENT';
+        }
+        if (board.askReplay === currentUser.userId) {
+            return 'BUTTON_REPLAY_PROPOSED';
+        }
     }
 
     isMyTurn() {
@@ -128,8 +151,10 @@ class Game extends Component {
     render() {
         const T = i18n.createComponent();
         const currentUser = this.getCurrentUser();
-        let replayCount = 0;
         let replayButton = '';
+        let cancelButton = '';
+        let abortButton = '';
+        let winButton = '';
 
         if (!this.props.board) {
             return (<Panel type='warn' text='GAME_LOADING' />);
@@ -160,8 +185,17 @@ class Game extends Component {
             this.changeFavicon((current.whiteIsNext ? '/favicon-w' : '/favicon-b'));
         } else {
             this.changeFavicon('/favicon');
-            replayCount = this.checkReplay(current);
-            replayButton = <Button text={i18n.__('REPLAY') + '(' + replayCount + '/2)' } onClick={(current) => this.replay(current)} />;
+            replayButton = <Button text={this.checkReplay(current)} onClick={(current) => this.replayButton(current)} />;
+        }
+
+        if (current.step < 2) {
+            cancelButton = <Button text="BUTTON_CANCEL_GAME" onClick={(current) => this.cancelButton(current)} />;
+        } else if (!current.end) {
+            if (!this.isMyTurn() && (current.lastActionAt.getTime() < ((new Date()).getTime() - 1000 * 3600 * 24))) {
+                winButton = <Button text="BUTTON_FINISH_GAME" classname="bluebutton" onClick={(current) => this.winButton(current)} />;
+            } else {
+                abortButton = <Button text="BUTTON_ABORT_GAME" classname="redbutton" onClick={(current) => this.abordButton(current)} />;
+            }
         }
 
         return (
@@ -209,6 +243,9 @@ class Game extends Component {
                                 disabled
                             />
                             { replayButton }
+                            { cancelButton }
+                            { abortButton }
+                            { winButton }
                         </div>
                     </div>
                     <div id="gameBoard" className="game-board">
