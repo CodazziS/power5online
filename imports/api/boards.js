@@ -248,7 +248,7 @@ Meteor.methods({
         checkUserEditAction(board, guest);
 
         if (currentUser.userId === board.authorId) {
-            winnerIsAuthor = true
+            winnerIsAuthor = true;
         }
 
         if (board.lastActionAt.getTime() < ((new Date()).getTime() - 1000 * 3600 * 24)) {
