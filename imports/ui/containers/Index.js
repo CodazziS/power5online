@@ -9,6 +9,8 @@ import { Boards } from '../../api/boards.js';
 
 import LaunchedGame from './parts/LaunchedGame.js';
 import LastGame from './parts/LastGame.js';
+import WatchGame from './parts/WatchGame.js';
+import FindGame from './parts/FindGame.js';
 import Header from './components/Header.js';
 import Footer from './components/Footer.js';
 
@@ -36,16 +38,8 @@ class App extends Component {
         });
     }
 
-    getLaunchedGames() {
-        if (typeof this.props.launchGames !== 'undefined' && this.props.launchGames.length > 0 ) {
-            return this.props.launchGames;
-        } else {
-            return [];
-        }
-    }
-
     renderLaunchedGames() {
-        return this.getLaunchedGames().map((game) => (
+        return this.props.launchGames.map((game) => (
             <LaunchedGame
                 key={game._id}
                 game={game}
@@ -54,16 +48,8 @@ class App extends Component {
         ));
     }
 
-    getLastGames() {
-        if (typeof this.props.lastGames !== 'undefined' && this.props.lastGames.length > 0 ) {
-            return this.props.lastGames;
-        } else {
-            return [];
-        }
-    }
-
     renderLastGames() {
-        return this.getLastGames().map((game) => (
+        return this.props.lastGames.map((game) => (
             <LastGame
                 key={game._id}
                 game={game}
@@ -72,9 +58,35 @@ class App extends Component {
         ));
     }
 
+    renderFindGame() {
+        return this.props.findGame.map((game) => (
+            <FindGame
+                key={game._id}
+                game={game}
+                onClick={this.goToGame}
+            />
+        ));
+    }
+
+    renderWatchGames() {
+        return this.props.watchGame.map((game) => (
+            <WatchGame
+                key={game._id}
+                game={game}
+                onClick={this.goToGameVisitor}
+            />
+        ));
+    }
+
     goToGame() {
         if (this.props.game._id !== null) {
             FlowRouter.go('game.show', {_id: this.props.game._id});
+        }
+    }
+
+    goToGameVisitor() {
+        if (this.props.game._id !== null) {
+            FlowRouter.go('game.spec', {_id: this.props.game._id});
         }
     }
 
@@ -155,6 +167,27 @@ class App extends Component {
                         <h2><T>GAMES_LASTS</T></h2><br />
                         {this.renderLastGames()}
                     </div>
+
+                    {/*********** FIND A GAME ***************/}
+                    <div id="findGame" className="home_box">
+                        <h2><T>FIND_A_GAME</T></h2><br />
+                        <div className="home_box_row">
+                            <div className="home_box_col250"><strong><T>OPPONENT</T></strong></div>
+                            <div className="home_box_col110">&nbsp;</div>
+                        </div>
+                        {this.renderFindGame()}
+                    </div>
+
+                    {/*********** WATCH GAME ***************/}
+                    <div id="findGame" className="home_box">
+                        <h2><T>WATCH_A_GAME</T></h2><br />
+                        <div className="home_box_row">
+                            <div className="home_box_col125"><strong><T>PLAYER_ONE</T></strong></div>
+                            <div className="home_box_col125"><strong><T>PLAYER_TWO</T></strong></div>
+                            <div className="home_box_col110">&nbsp;</div>
+                        </div>
+                        {this.renderWatchGames()}
+                    </div>
                 </div>
                 <Footer />
             </div>
@@ -164,6 +197,8 @@ class App extends Component {
 
 export default withTracker(() => {
     Meteor.subscribe('myGames', localStorage.getItem('guest_id'));
+    Meteor.subscribe('publicGame');
+
     let userId = localStorage.getItem('guest_id');
     if (Meteor.user()) {
         userId = Meteor.user()._id;
@@ -192,6 +227,26 @@ export default withTracker(() => {
             ]},
             {sort:{lastActionAt: -1, createdAt: -1}, limit: 5}
             ).fetch(),
+
+        findGame: Boards.find(
+            {
+                $and: [
+                    {opponentId: null},
+                    {authorId: { $ne: userId }},
+                    {private: false}
+            ]},
+            {sort:{createdAt: -1}, limit: 5}
+        ).fetch(),
+
+        watchGame: Boards.find(
+            {
+                $and: [
+                    {end: false},
+                    {opponentId: { $ne: null }},
+                    {private: false}
+                ]},
+            {sort:{lastActionAt: -1}}
+        ).fetch(),
 
         winGames: Boards.find({
             $and: [

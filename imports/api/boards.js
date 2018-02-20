@@ -15,17 +15,20 @@ if (Meteor.isServer) {
                 {opponentId: null},
             ]});
     });
+    Meteor.publish('publicGame', function () {
+        return Boards.find({
+            $or: [
+                {end: false},
+                {private: false}
+            ]}
+       );
+    });
     Meteor.publish('gameAuthorization', function (guestId, gameId) {
         return Boards.find(
             {_id: gameId},
             {
                 fields: {_id: 1, private: 1}
             }
-       );
-    });
-    Meteor.publish('gameVisitor', function (guestId, gameId) {
-        return Boards.find(
-            {_id: gameId, private: false},
         );
     });
 }
