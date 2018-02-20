@@ -47,7 +47,7 @@ class Game extends Component {
     changeFavicon(board) {
         let src = '/favicon';
         if (!board.end) {
-            src = (current.whiteIsNext ? '/favicon-w' : '/favicon-b');
+            src = (board.whiteIsNext ? '/favicon-w' : '/favicon-b');
         }
 
         document.head.removeChild(document.getElementById('favicon'));
@@ -207,7 +207,7 @@ class Game extends Component {
                 Meteor.setTimeout(() => this.sendNotification(current.lastActionAt), 30000);
             }
         }
-        changeFavicon(current);
+        this.changeFavicon(current);
         button = this.getButtons(current);
 
         return (
