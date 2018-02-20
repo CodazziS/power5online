@@ -30,7 +30,7 @@ class Visitor extends Component {
         }
     }
 
-    render() {
+    checkAccess() {
         if (!this.props.board) {
             return (<Panel type='warn' text='GAME_LOADING' />);
         }
@@ -39,9 +39,17 @@ class Visitor extends Component {
                 <Panel type='error' text='THIS_GAME_IS_PRIVATE' />
             );
         }
+        return null;
+    }
 
+    render() {
+        const access = this.checkAccess();
         const current = this.props.board;
         let replayButton = '';
+
+        if (access !== null) {
+            return access;
+        }
 
         document.title = current.game;
         if (current.replayId) {
@@ -97,10 +105,10 @@ class Visitor extends Component {
 }
 
 export default withTracker(() => {
-    Meteor.subscribe('gameVisitor', localStorage.getItem('guest_id'), FlowRouter.getParam('_id'));
+    Meteor.subscribe('publicGame', localStorage.getItem('guest_id'), FlowRouter.getParam('_id'));
     Meteor.subscribe('gameAuthorization', localStorage.getItem('guest_id'), FlowRouter.getParam('_id'));
 
     return {
-        board: Boards.findOne(),
+        board: Boards.findOne({_id: FlowRouter.getParam('_id')}),
     };
 })(Visitor);

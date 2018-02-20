@@ -12,13 +12,17 @@ import '../imports/startup/accounts-config.js';
 
 /* Language */
 function getLang () {
-    return (
-        navigator.languages && navigator.languages[0] ||
+    let lang = navigator.languages && navigator.languages[0] ||
         navigator.language ||
         navigator.browserLanguage ||
         navigator.userLanguage ||
-        'en-US'
-    );
+        'en-US';
+
+    // Allow only languages with available translations
+    if (!['fr_FR'].includes(lang)) {
+        return 'fr_FR';
+    }
+    return lang;
 }
 i18n.setLocale(getLang());
 

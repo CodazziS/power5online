@@ -1,0 +1,143 @@
+.gameContainer {
+  height: calc(90vh - 20px);
+  width: calc(90vh - 20px);
+  max-height: calc(100vw - 20px);
+  max-width: calc(100vw - 20px);
+  flex-direction: column;
+  display: flex;
+  align-content: stretch;
+  margin-left: auto;
+  margin-right: auto;
+  box-shadow: 2px 2px 8px black;
+}
+.dotsRow {
+  flex-grow: 1;
+  align-content: center;
+  justify-content: center;
+  display: flex;
+}
+.dot {
+  padding: 3px;
+  display: inline-block;
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+.dotsRow:nth-child(even) .dot:nth-child(even) {
+  background-color: lightblue;
+}
+.dotsRow:nth-child(even) .dot:nth-child(odd) {
+  background-color: cornflowerblue;
+}
+.dotsRow:nth-child(odd) .dot:nth-child(even) {
+  background-color: cornflowerblue;
+}
+.dotsRow:nth-child(odd) .dot:nth-child(odd) {
+  background-color: lightblue;
+}
+.dotsRow:nth-child(even) .dot:nth-child(even):hover {
+  background-color: aliceblue;
+}
+.dotsRow:nth-child(even) .dot:nth-child(odd):hover {
+  background-color: aliceblue;
+}
+.dotsRow:nth-child(odd) .dot:nth-child(even):hover {
+  background-color: aliceblue;
+}
+.dotsRow:nth-child(odd) .dot:nth-child(odd):hover {
+  background-color: aliceblue;
+}
+.dot div {
+  position: relative;
+  top: -500px;
+  left: -100px;
+}
+.dot .black {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: #050505;
+  box-shadow: 2px 2px 4px #959595;
+  transition: top 0.5s, left 1s ease;
+}
+.dot .white {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background-color: white;
+  box-shadow: 2px 2px 4px darkslategrey;
+  transition: top 0.75s, left 1s ease;
+}
+.dotsRow:nth-child(even) .dot.last, .dotsRow:nth-child(odd) .dot.last {
+  background-color: indianred;
+}
+.dotsRow:nth-child(even) .dot.win, .dotsRow:nth-child(odd) .dot.win {
+  background-color: greenyellow;
+}
+
+#gameScore {
+  background-color: white;
+  box-shadow: 2px 2px 8px black;
+  padding: 20px;
+  max-width: 300px;
+}
+.scoreboard {
+  min-width: 200px;
+  margin-top: 10px;
+}
+.scoreboardPlayer div {
+  display: inline-block;
+}
+.scoreboardPlayerNotActive {
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+}
+.scoreboardPlayerActive {
+  background-color: indianred;
+  width: 40px;
+  height: 40px;
+  padding: 10px;
+  border-radius: 10px;
+}
+.scoreboardPlayerName {
+  margin-left: 10px;
+  font-weight: bold;
+  font-size: 24px;
+  text-align: left;
+  width: calc(100% - 70px);
+  vertical-align: middle;
+}
+.scoreboardSeparator {
+  display: inline-block;
+  width: calc(50% - 30px);
+  vertical-align: 10px;
+  height: 4px;
+  background-color: black;
+}
+.scoreboardSeparatorText {
+  display: inline-block;
+  width: 50px;
+  font-weight: bold;
+  font-size: 32px;
+  text-align: center;
+}
+.scoreboardPlayerWhite, .scoreboardPlayerBlack {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  box-shadow: 2px 2px 4px #959595;
+  vertical-align: middle;
+}
+.scoreboardPlayerBlack {
+  background-color: black;
+  box-shadow: 2px 2px 4px #959595;
+}
+.scoreboardPlayerWhite {
+  background-color: white;
+  box-shadow: 2px 2px 4px darkslategrey;
+}

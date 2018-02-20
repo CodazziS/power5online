@@ -39,5 +39,11 @@
   "BUTTON_CANCEL_GAME": "Annuler la partie",
   "BUTTON_FINISH_GAME": "Gagner la partie par forfait",
   "BUTTON_ABORT_GAME": "Abandonner la partie",
+  "FIND_A_GAME": "Trouver une partie",
+  "WATCH_A_GAME": "Regarder une partie",
+  "PLAYER_ONE": "Joueur 1",
+  "PLAYER_TWO": "Joueur 2",
+  "JOIN_GAME": "Rejoindre",
+  "GO_VISITOR": "Regarder",
   "GO_TO_HOME": "Retour à l'accueil"
 }
