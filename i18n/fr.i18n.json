@@ -1,5 +1,18 @@
 {
   "_locale": "fr",
+  "ACCOUNT_LOADING": "Chargement du compte",
+  "ACCOUNT_NOTIFICATION_ENABLE": "Les notifications sont activées",
+  "ACCOUNT_NOTIFICATION_DISABLE": "Les notifications sont désactivées",
+  "ACCOUNT_PUBLIC_USERNAME": "Pseudonyme publique",
+  "ACCOUNT_SETTINGS_TITLE": "Mes préférences",
+  "ACCOUNT_USERNAME_ALREADY_EXIST": "Ce nom d'utilisateur existe déjà",
+  "ACCOUNT_USERNAME_SAVED": "Votre nom d'utilisateur à été sauvegardé",
+
+  "INDEX_SEE_ALL": "Voir tout",
+
+  "HISTORY_LOADING": "Chargement de l'historique",
+  "HISTORY_TITLE": "Mon historique",
+
   "APP_TITLE": "POWER 5",
   "GAME_PRIVATE": "Partie privée",
   "GAME_PUBLIC": "Partie publique",
@@ -10,12 +23,14 @@
   "GO_BACK_PLAY": "Reprendre",
   "THIS_GAME_IS_PRIVATE": "Ce jeu est privé",
   "CREATE_NEW_GAME": "Créer une nouvelle partie",
+
   "NEW_GAME_NAME": "Nom de la partie :",
   "NEW_GAME_NAME_VALUE": "Ma partie",
   "NEW_GAME_SIZE": "Taille du plateau :",
   "NEW_GAME_INVITATION": "Inviter un joueur (optionnel) :",
   "NEW_GAME_INVITATION_USERNAME": "Pseudonyme",
   "NEW_GAME_SUBMIT": "Créer le jeu",
+
   "STATS_TITLE": "Mes statistiques",
   "GAMES_WIN": "Parties gagnées",
   "GAMES_LOSE": "Parties perdues",
@@ -28,9 +43,8 @@
   "VISITOR_LINK": "Lien visiteur : ",
   "REPLAY": "Rejouer",
   "MY_ACCOUNT": "Mon compte",
-  "SETTINGS_TITLE": "Mes préférences",
-  "NOTIFICATION_ENABLE": "Les notifications sont activées",
-  "NOTIFICATION_DISABLE": "Les notifications sont désactivées",
+
+
   "BUTTON_REPLAY_VISITOR": "Suivre les joueurs",
   "BUTTON_REPLAY_NEXT_GAME": "Aller à la partie suivante",
   "BUTTON_REPLAY": "Demander à rejouer",

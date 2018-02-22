@@ -7,6 +7,7 @@ import Index from '../imports/ui/containers/Index.js';
 import Game from '../imports/ui/containers/Game.js';
 import Visitor from '../imports/ui/containers/Visitor.js';
 import Account from '../imports/ui/containers/Account.js';
+import HistoryContainer from '../imports/ui/containers/HistoryContainer.js';
 import '../imports/startup/accounts-config.js';
 
 
@@ -19,7 +20,7 @@ function getLang () {
         'en-US';
 
     // Allow only languages with available translations
-    if (!['fr_FR'].includes(lang)) {
+    if (!i18n.getLanguages().includes(lang)) {
         return 'fr_FR';
     }
     return lang;
@@ -74,6 +75,16 @@ FlowRouter.route('/my-account', {
     action() {
         mount(Account, {
             main: <Account/>,
+        });
+    },
+});
+
+/* History */
+FlowRouter.route('/history/:page?', {
+    name: 'account.history',
+    action() {
+        mount(HistoryContainer, {
+            main: <HistoryContainer/>,
         });
     },
 });

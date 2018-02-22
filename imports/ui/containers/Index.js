@@ -6,6 +6,7 @@ import { withTracker } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
 import { Boards } from '../../api/boards.js';
+import { Users } from '../../api/users.js';
 
 import LaunchedGame from './parts/LaunchedGame.js';
 import LastGame from './parts/LastGame.js';
@@ -164,7 +165,7 @@ class App extends Component {
 
                     {/*********** LASTS GAMES ***************/}
                     <div id="lastGames" className="home_box">
-                        <h2><T>GAMES_LASTS</T></h2><br />
+                        <h2><T>GAMES_LASTS</T> (<a href="/history"><T>INDEX_SEE_ALL</T></a>)</h2><br />
                         {this.renderLastGames()}
                     </div>
 
@@ -196,7 +197,7 @@ class App extends Component {
 }
 
 export default withTracker(() => {
-    Meteor.subscribe('myGames', localStorage.getItem('guest_id'));
+    Meteor.subscribe('myGamesLite', localStorage.getItem('guest_id'));
     Meteor.subscribe('publicGame');
 
     let userId = localStorage.getItem('guest_id');

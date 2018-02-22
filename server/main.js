@@ -6,5 +6,4 @@ import Power5Migration from '../imports/Migrations/Power5Migration.js';
 
 Meteor.startup(() => {
     let migrations = new Power5Migration();
-
 });

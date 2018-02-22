@@ -203,7 +203,7 @@ class Game extends Component {
 
         if (this.isMyTurn()) {
             document.title = i18n.__('MY_ROUND');
-            if (this.props.account[0] && this.props.account[0].allowNotification) {
+            if (this.props.account[0] && this.props.account[0].power5Notification) {
                 Meteor.setTimeout(() => this.sendNotification(current.lastActionAt), 30000);
             }
         }
@@ -259,7 +259,7 @@ class Game extends Component {
                     </div>
                     <div id="gameBoard" className="game-board">
                         <Board
-                            dots={current.dots}
+                            dots={current.dotsHistory[current.step]}
                             size={current.size}
                             last={current.last}
                             onClick={(i) => this.handleClick(i)}

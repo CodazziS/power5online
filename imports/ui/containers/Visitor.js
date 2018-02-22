@@ -55,6 +55,7 @@ class Visitor extends Component {
         if (current.replayId) {
             replayButton = <Button text="BUTTON_REPLAY_VISITOR" onClick={(current) => this.replayButton(current)}/>;
         }
+        console.log(this.props.board);
         return (
             <div className="container">
                 <Header
@@ -91,7 +92,7 @@ class Visitor extends Component {
                     </div>
                     <div id="gameBoard" className="game-board">
                         <Board
-                            dots={current.dots}
+                            dots={current.dotsHistory[current.step]}
                             size={current.size}
                             last={current.last}
                             onClick={(i) => this.handleClick(i)}
