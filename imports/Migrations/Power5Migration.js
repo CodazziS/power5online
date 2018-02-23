@@ -64,7 +64,7 @@ export default class Power5Migration {
                                 $set: {
                                     power5Username: users[i].username,
                                     power5Notification: users[i].allowNotification,
-                                    allowNotification: null
+                                    allowNotification: undefined
                                 },
                             });
                         }
@@ -73,12 +73,12 @@ export default class Power5Migration {
                     Meteor.users._ensureIndex(
                         {'power5Username': 'text', username: 'text'},
                         {
-                            'weights': {
-                                'username': 1,
-                                'power5Username': 2
+                            "weights": {
+                                "username": 1,
+                                "power5Username": 2
                             },
                             default_language: 'french',
-                            name: 'username_text'
+                            name: "username_text"
                         }
                     );
                 },
@@ -126,7 +126,31 @@ export default class Power5Migration {
                 down() {
                 }
             });
-            Migrations.migrateTo(3);
+
+            Migrations.add({
+                version: 4,
+                name: 'Remove dotsHistory, and recreate dots field',
+                up() {
+                    let boards = Boards.find().fetch();
+                    let i = 0;
+                    for (i in boards) {
+                        if (boards.hasOwnProperty(i)) {
+                            let dots = boards[i].dotsHistory[boards[i].step];
+
+                            Boards.update(boards[i]._id, {
+                                $set: {
+                                    dotsHistory: null,
+                                    stepHistory: null,
+                                    dots
+                                },
+                            });
+                        }
+                    }
+                },
+                down() {
+                }
+            });
+            Migrations.migrateTo(4);
         }
 
     }
