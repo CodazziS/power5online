@@ -188,7 +188,6 @@ export default class Game extends Component {
     }
 
     render() {
-        console.log(this.props);
         const T = i18n.createComponent();
         let button;
         const access = this.checkAccess();
