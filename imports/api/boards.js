@@ -30,7 +30,6 @@ if (Meteor.isServer) {
     Meteor.publish('publicGame', function () {
         return Boards.find({
             $or: [
-                {end: false},
                 {private: false}
             ]}
        );
@@ -38,13 +37,12 @@ if (Meteor.isServer) {
     Meteor.publish('publicGameLite', function () {
         return Boards.find({
             $or: [
-                {end: false},
                 {private: false}
             ]},
             {fields: {dots: 0, dotsHistory: 0}}
         );
     });
-    Meteor.publish('gameAuthorization', function (guestId, gameId) {
+    Meteor.publish('gameAuthorization', function (gameId) {
         return Boards.find(
             {_id: gameId},
             {

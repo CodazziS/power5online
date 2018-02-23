@@ -64,7 +64,7 @@ export default class Power5Migration {
                                 $set: {
                                     power5Username: users[i].username,
                                     power5Notification: users[i].allowNotification,
-                                    allowNotification: undefined
+                                    allowNotification: null
                                 },
                             });
                         }
@@ -73,12 +73,12 @@ export default class Power5Migration {
                     Meteor.users._ensureIndex(
                         {'power5Username': 'text', username: 'text'},
                         {
-                            "weights": {
-                                "username": 1,
-                                "power5Username": 2
+                            'weights': {
+                                'username': 1,
+                                'power5Username': 2
                             },
                             default_language: 'french',
-                            name: "username_text"
+                            name: 'username_text'
                         }
                     );
                 },

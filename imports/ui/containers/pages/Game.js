@@ -4,18 +4,17 @@ import React, { Component } from 'react';
 
 import { FlowRouter } from 'meteor/kadira:flow-router';
 import { withTracker } from 'meteor/react-meteor-data';
-import { Boards } from '../../api/boards.js';
 import { Meteor } from 'meteor/meteor';
 import i18n from 'meteor/universe:i18n';
 
-import Board from './parts/Board.js';
-import Header from './components/Header.js';
-import Panel from './components/Panel.js';
-import ToggleButton from './components/ToggleButton.js';
-import Button from './components/Button.js';
-import Footer from './components/Footer.js';
+import Board from '../parts/Board.js';
+import Header from '../components/Header.js';
+import Panel from '../components/Panel.js';
+import ToggleButton from '../components/ToggleButton.js';
+import Button from '../components/Button.js';
+import Footer from '../components/Footer.js';
 
-class Game extends Component {
+export default class Game extends Component {
 
     constructor(props) {
         super(props);
@@ -34,7 +33,7 @@ class Game extends Component {
 
         if (Meteor.user()) {
             userId = Meteor.user()._id;
-            userName = Meteor.user().username;
+            userName = Meteor.user().power5Username;
             userType = 'meteor';
         } else {
             userId = guestId;
@@ -170,13 +169,12 @@ class Game extends Component {
     checkAccess() {
         const currentUser = this.getCurrentUser();
 
-        if (!this.props.board) {
+        if (this.props.loading) {
             return (<Panel type='warn' text='GAME_LOADING' />);
         }
         if (!this.props.board.authorId) {
             if (!this.props.board.private) {
                 FlowRouter.go('game.spec', {_id: this.props.board._id});
-                return null;
             }
             return (
                 <Panel type='error' text='GAME_FULL' />
@@ -190,6 +188,7 @@ class Game extends Component {
     }
 
     render() {
+        console.log(this.props);
         const T = i18n.createComponent();
         let button;
         const access = this.checkAccess();
@@ -203,7 +202,7 @@ class Game extends Component {
 
         if (this.isMyTurn()) {
             document.title = i18n.__('MY_ROUND');
-            if (this.props.account[0] && this.props.account[0].power5Notification) {
+            if (Meteor.user().power5Notification) {
                 Meteor.setTimeout(() => this.sendNotification(current.lastActionAt), 30000);
             }
         }
@@ -271,14 +270,3 @@ class Game extends Component {
         );
     }
 }
-
-export default withTracker(() => {
-    Meteor.subscribe('myGames', localStorage.getItem('guest_id'));
-    Meteor.subscribe('gameAuthorization', localStorage.getItem('guest_id'), FlowRouter.getParam('_id'));
-    Meteor.subscribe('myAccount');
-
-    return {
-        board: Boards.findOne(FlowRouter.getParam('_id')),
-        account: Meteor.users.find().fetch(),
-    };
-})(Game);

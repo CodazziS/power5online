@@ -18,7 +18,7 @@ export default class History extends React.Component {
         this.linePerPages = 10;
         this.state = {
             page: 0
-        }
+        };
     }
 
     goToGame() {
@@ -47,16 +47,16 @@ export default class History extends React.Component {
                 previousLabel="<"
                 nextLabel=">"
                 breakLabel={<a href="">...</a>}
-                breakClassName={"pagination_break"}
+                breakClassName={'pagination_break'}
                 pageCount={pages}
                 marginPagesDisplayed={2}
                 pageRangeDisplayed={5}
                 onPageChange={function(data) {
                     self.setState({page: data.selected});
                 }}
-                containerClassName={"pagination"}
-                subContainerClassName={"pages pagination"}
-                activeClassName={"active"} />
+                containerClassName={'pagination'}
+                subContainerClassName={'pages pagination'}
+                activeClassName={'active'} />
         );
     }
 
