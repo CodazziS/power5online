@@ -77,7 +77,6 @@ export default class Power5Migration {
                                 "username": 1,
                                 "power5Username": 2
                             },
-                            default_language: 'french',
                             name: "username_text"
                         }
                     );
