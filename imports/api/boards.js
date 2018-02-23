@@ -15,15 +15,34 @@ if (Meteor.isServer) {
                 {opponentId: null},
             ]});
     });
+    Meteor.publish('myGamesLite', function (guestId) {
+        return Boards.find({
+            $or: [
+                {authorId: this.userId},
+                {opponentId: this.userId},
+                {authorId: guestId},
+                {opponentId: guestId},
+                {opponentId: null},
+            ]},
+            {fields: {dots: 0, dotsHistory: 0}}
+        );
+    });
     Meteor.publish('publicGame', function () {
         return Boards.find({
             $or: [
-                {end: false},
                 {private: false}
             ]}
        );
     });
-    Meteor.publish('gameAuthorization', function (guestId, gameId) {
+    Meteor.publish('publicGameLite', function () {
+        return Boards.find({
+            $or: [
+                {private: false}
+            ]},
+            {fields: {dots: 0, dotsHistory: 0}}
+        );
+    });
+    Meteor.publish('gameAuthorization', function (gameId) {
         return Boards.find(
             {_id: gameId},
             {
@@ -56,7 +75,7 @@ function getCurrentUser(guestId) {
 
     if (Meteor.user()) {
         userId = Meteor.user()._id;
-        userName = Meteor.user().username;
+        userName = Meteor.user().power5Username;
         userType = 'meteor';
     } else {
         check(guestId, String);
@@ -165,8 +184,7 @@ Meteor.methods({
         }
 
         if (game.opponent) {
-            let opponentRegex = new RegExp(['^', game.opponent, '$'].join(''), 'i');
-            let opponent = Meteor.users.findOne({username: { $regex: opponentRegex }});
+            let opponent = Meteor.users.findOne({$text: {$search: game.opponent, $caseSensitive :false}});
 
             if (opponent) {
                 opponentType = 'meteor';
@@ -180,7 +198,8 @@ Meteor.methods({
         return Boards.insert({
             size: game.size,
             game: game.game,
-            dots: dotsGeneration(game.size),
+            //dots: dotsGeneration(game.size),
+            dotsHistory: [dotsGeneration(game.size)],
             whiteIsNext: true,
             creatorIsWhite: (Math.floor(Math.random() * Math.floor(2)) === 1),
             authorType: currentUser.userType,
@@ -214,7 +233,7 @@ Meteor.methods({
             $set: {
                 opponentType: currentUser.userType,
                 opponentId: currentUser.userId,
-                opponentUsername: currentUser.userName,
+                opponentUsername: currentUser.power5Username,
                 lastActionAt: null
             },
         });
@@ -316,7 +335,8 @@ Meteor.methods({
             const newId = Boards.insert({
                 size: board.size,
                 game: board.game,
-                dots: dotsGeneration(board.size),
+                // dots: dotsGeneration(board.size),
+                dotsHistory: [dotsGeneration(board.size)],
                 whiteIsNext: true,
                 creatorIsWhite: !board.creatorIsWhite,
                 authorType: board.authorType,
@@ -348,7 +368,10 @@ Meteor.methods({
         const whitePlayer = (board.creatorIsWhite === true) ? board.authorId :  board.opponentId;
         const blackPlayer = (board.creatorIsWhite === false) ? board.authorId :  board.opponentId;
         const currentUser = getCurrentUser(guest);
-        let dots = board.dots;
+        let dotsHistory = board.dotsHistory;
+        let step = board.step;
+        let dots = dotsHistory[step];
+
 
         check(gameId, String);
         checkUserEditAction(board, guest);
@@ -362,13 +385,14 @@ Meteor.methods({
         }
 
         dots[row][col].state = board.whiteIsNext ? 'white' : 'black';
+        dotsHistory.push(dots);
         Boards.update(gameId, {
             $set: {
-                dots,
+                dotsHistory,
                 whiteIsNext: !board.whiteIsNext,
                 last: row + '-' + col,
                 lastActionAt: new Date(),
-                step: board.step + 1
+                step: step++
             },
         });
 
@@ -387,9 +411,10 @@ Meteor.methods({
                 dots[winDots[3][0]][winDots[3][1]].win = true;
                 dots[winDots[4][0]][winDots[4][1]].win = true;
             }
+            dotsHistory[step] = dots;
             Boards.update(gameId, {
                 $set: {
-                    dots,
+                    dotsHistory,
                     end: true,
                     winnerIsAuthor,
                     draw: checkWin.draw

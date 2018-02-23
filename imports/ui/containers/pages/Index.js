@@ -5,16 +5,14 @@ import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import { FlowRouter } from 'meteor/kadira:flow-router';
 
-import { Boards } from '../../api/boards.js';
+import LaunchedGame from '../parts/LaunchedGame.js';
+import LastGame from '../parts/LastGame.js';
+import WatchGame from '../parts/WatchGame.js';
+import FindGame from '../parts/FindGame.js';
+import Header from '../components/Header.js';
+import Footer from '../components/Footer.js';
 
-import LaunchedGame from './parts/LaunchedGame.js';
-import LastGame from './parts/LastGame.js';
-import WatchGame from './parts/WatchGame.js';
-import FindGame from './parts/FindGame.js';
-import Header from './components/Header.js';
-import Footer from './components/Footer.js';
-
-class App extends Component {
+export default class Index extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
@@ -164,7 +162,7 @@ class App extends Component {
 
                     {/*********** LASTS GAMES ***************/}
                     <div id="lastGames" className="home_box">
-                        <h2><T>GAMES_LASTS</T></h2><br />
+                        <h2><T>GAMES_LASTS</T> (<a href="/history"><T>INDEX_SEE_ALL</T></a>)</h2><br />
                         {this.renderLastGames()}
                     </div>
 
@@ -195,84 +193,3 @@ class App extends Component {
     }
 }
 
-export default withTracker(() => {
-    Meteor.subscribe('myGames', localStorage.getItem('guest_id'));
-    Meteor.subscribe('publicGame');
-
-    let userId = localStorage.getItem('guest_id');
-    if (Meteor.user()) {
-        userId = Meteor.user()._id;
-    }
-    return {
-        launchGames: Boards.find(
-            {
-                $and: [
-                    {end: false},
-                    {$or: [
-                        {authorId: userId},
-                        {opponentId: userId}
-                    ]}
-            ]},
-            {sort:{lastActionAt: -1, createdAt: -1}}
-            ).fetch(),
-
-        lastGames: Boards.find(
-            {
-                $and: [
-                    {end: true},
-                    {$or: [
-                        {authorId: userId},
-                        {opponentId: userId}
-                    ]}
-            ]},
-            {sort:{lastActionAt: -1, createdAt: -1}, limit: 5}
-            ).fetch(),
-
-        findGame: Boards.find(
-            {
-                $and: [
-                    {opponentId: null},
-                    {authorId: { $ne: userId }},
-                    {private: false}
-            ]},
-            {sort:{createdAt: -1}, limit: 5}
-        ).fetch(),
-
-        watchGame: Boards.find(
-            {
-                $and: [
-                    {end: false},
-                    {opponentId: { $ne: null }},
-                    {private: false}
-                ]},
-            {sort:{lastActionAt: -1}}
-        ).fetch(),
-
-        winGames: Boards.find({
-            $and: [
-                {end: true},
-                {$or: [
-                    {$and: [{authorId: userId}, {winnerIsAuthor: true}]},
-                    {$and: [{opponentId: userId}, {winnerIsAuthor: false}]}
-                ]}
-            ]}).count(),
-
-        loseGames: Boards.find({
-            $and: [
-                {end: true},
-                {$or: [
-                        {$and: [{authorId: userId}, {winnerIsAuthor: false}]},
-                        {$and: [{opponentId: userId}, {winnerIsAuthor: true}]}
-                    ]}
-            ]}).count(),
-
-        drawGames: Boards.find({
-            $and: [
-                {end: true},
-                {$or: [
-                        {$and: [{authorId: userId}, {draw: true}]},
-                        {$and: [{opponentId: userId}, {draw: true}]}
-                    ]}
-            ]}).count(),
-    };
-})(App);

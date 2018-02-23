@@ -47,3 +47,19 @@ input.disableInput {
   border: none;
   width: 200px;
 }
+
+.input_error {
+  display: none;
+  text-align: right;
+  color: red;
+  font-weight: bold;
+  font-size: 11px;
+}
+
+.input_success {
+  display: none;
+  text-align: right;
+  color: green;
+  font-weight: bold;
+  font-size: 11px;
+}

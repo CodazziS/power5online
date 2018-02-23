@@ -3,10 +3,12 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import { mount } from 'react-mounter';
 import i18n from 'meteor/universe:i18n';
 
-import Index from '../imports/ui/containers/Index.js';
-import Game from '../imports/ui/containers/Game.js';
-import Visitor from '../imports/ui/containers/Visitor.js';
-import Account from '../imports/ui/containers/Account.js';
+import AccountContainer from '../imports/ui/containers/AccountContainer.js';
+import GameContainer from '../imports/ui/containers/GameContainer.js';
+import HistoryContainer from '../imports/ui/containers/HistoryContainer.js';
+import IndexContainer from '../imports/ui/containers/IndexContainer.js';
+import VisitorContainer from '../imports/ui/containers/VisitorContainer.js';
+
 import '../imports/startup/accounts-config.js';
 
 
@@ -19,7 +21,7 @@ function getLang () {
         'en-US';
 
     // Allow only languages with available translations
-    if (!['fr_FR'].includes(lang)) {
+    if (!i18n.getLanguages().includes(lang)) {
         return 'fr_FR';
     }
     return lang;
@@ -36,15 +38,15 @@ if (localStorage.getItem('guest_id') === null) {
 FlowRouter.route('/', {
     name: 'Index',
     action() {
-        mount(Index, {
-            main: <Index/>,
+        mount(IndexContainer, {
+            main: <IndexContainer/>,
         });
     },
 });
 FlowRouter.notFound = {
     action() {
-        mount(Index, {
-            main: <Index/>,
+        mount(IndexContainer, {
+            main: <IndexContainer/>,
         });
     },
 };
@@ -52,8 +54,8 @@ FlowRouter.notFound = {
 FlowRouter.route('/game/:_id', {
     name: 'game.show',
     action() {
-        mount(Game, {
-            main: <Game/>,
+        mount(GameContainer, {
+            main: <GameContainer/>,
         });
     },
 });
@@ -62,8 +64,8 @@ FlowRouter.route('/game/:_id', {
 FlowRouter.route('/visitor/:_id', {
     name: 'game.spec',
     action() {
-        mount(Visitor, {
-            main: <Visitor/>,
+        mount(VisitorContainer, {
+            main: <VisitorContainer/>,
         });
     },
 });
@@ -72,8 +74,18 @@ FlowRouter.route('/visitor/:_id', {
 FlowRouter.route('/my-account', {
     name: 'account.edit',
     action() {
-        mount(Account, {
-            main: <Account/>,
+        mount(AccountContainer, {
+            main: <AccountContainer/>,
+        });
+    },
+});
+
+/* History */
+FlowRouter.route('/history/:page?', {
+    name: 'account.history',
+    action() {
+        mount(HistoryContainer, {
+            main: <HistoryContainer/>,
         });
     },
 });

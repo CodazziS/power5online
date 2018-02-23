@@ -1,0 +1,35 @@
+.pagination {
+  width: 100%;
+  text-align: center;
+  background-color: #d2edf4;
+  padding-top: 5px;
+  padding-bottom: 5px;
+}
+
+.pagination li {
+  user-select: none;
+  display: inline-block;
+  margin-right: 5px;
+  margin-left: 5px;
+}
+
+.pagination li a {
+  display: inline-block;
+  height: 30px;
+  width: 30px;
+  line-height: 30px;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 100%;
+}
+
+.pagination li a:hover {
+  background-color: #c2dde4;
+}
+.pagination li.active a {
+  box-shadow: 1px 1px 4px #929292;
+}
+.pagination li a:focus {
+  text-decoration: none;
+  outline: none;
+}
