@@ -90,7 +90,7 @@ export default class Visitor extends Component {
                     </div>
                     <div id="gameBoard" className="game-board">
                         <Board
-                            dots={current.dotsHistory[current.step]}
+                            dots={current.dots}
                             size={current.size}
                             last={current.last}
                             onClick={(i) => this.handleClick(i)}
