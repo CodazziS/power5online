@@ -28,7 +28,6 @@ if (Meteor.isServer) {
     });
 }
 
-
 Meteor.methods({
     'users.updateNotification'(value) {
         check(value, Boolean);
@@ -50,7 +49,8 @@ Meteor.methods({
                 throw new Meteor.Error('username-to-short');
             }
 
-            if (value !== Meteor.user().username &&
+
+            if (value.toLowerCase() !== Meteor.user().username.toLowerCase() &&
                 Meteor.users.find({$text: {$search: value, $caseSensitive :false}}).count() > 0) {
                 throw new Meteor.Error('username-already-exist');
             }

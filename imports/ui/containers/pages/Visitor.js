@@ -9,7 +9,7 @@ import Panel from '../components/Panel.js';
 import Header from '../components/Header.js';
 import Footer from '../components/Footer.js';
 import Button from '../components/Button.js';
-import IconButton from "../components/IconButton";
+import IconButton from '../components/IconButton';
 
 export default class Visitor extends Component {
 
@@ -42,7 +42,7 @@ export default class Visitor extends Component {
         let maxStep = this.props.board.step - 1;
 
         if (step >= this.props.board.step) {
-            step = maxStep
+            step = maxStep;
         }
         if (step < 0) {
             step = 0;
