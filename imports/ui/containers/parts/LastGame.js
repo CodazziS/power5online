@@ -35,7 +35,7 @@ export default class LastGame extends Component {
                 <div className="home_box_col115">{game.game}</div>
                 <div className="home_box_col115"><strong>{opponent}</strong></div>
                 <div className="home_box_col90">
-                    <button onClick={this.props.onClick.bind(this)}><T>BTN_REVIEW</T></button>
+                    <button onClick={this.props.onClick.bind(this)}><T>PART_LAST_GAME_REVIEW</T></button>
                 </div>
             </div>
         );

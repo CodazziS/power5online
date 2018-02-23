@@ -41,11 +41,11 @@ export default class LaunchedGame extends Component {
         return (
             <div className="home_box_row">
                 <div className="home_box_col125">
-                    <strong><T>{this.isMyTurn(userId, game) ? 'MY_ROUND' : 'OPPONENT_ROUND'}</T></strong>
+                    <strong><T>{this.isMyTurn(userId, game) ? 'PART_LAUNCH_GAME_MY_TURN' : 'PART_LAUNCH_GAME_OPPONENT_ROUND'}</T></strong>
                 </div>
                 <div className="home_box_col125">{opponent}</div>
                 <div className="home_box_col110 alright">
-                    <button onClick={this.props.onClick.bind(this)}><T>GO_BACK_PLAY</T></button>
+                    <button onClick={this.props.onClick.bind(this)}><T>PART_LAUNCH_GAME_PLAY</T></button>
                 </div>
             </div>
         );

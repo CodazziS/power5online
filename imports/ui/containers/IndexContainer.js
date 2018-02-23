@@ -7,7 +7,7 @@ import Index from './pages/Index.js';
 
 export default IndexContainer = withTracker(() => {
     const boardHandle = Meteor.subscribe('myGamesLite', localStorage.getItem('guest_id'));
-    const publicBoardHandle = Meteor.subscribe('publicGame');
+    const publicBoardHandle = Meteor.subscribe('publicGameLite', localStorage.getItem('guest_id'));
     const userId = (Meteor.user()) ? Meteor.user()._id : localStorage.getItem('guest_id');
     const loading = !boardHandle.ready() || !publicBoardHandle.ready();
 

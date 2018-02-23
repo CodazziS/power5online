@@ -45,7 +45,7 @@ export default class Account extends Component {
         return (
             <div className="container">
                 <Header
-                    title="MY_ACCOUNT"
+                    title="ACCOUNT_TITLE"
                 />
                 <div className="content">
                     <div className="account_content">

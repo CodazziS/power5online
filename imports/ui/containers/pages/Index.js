@@ -99,62 +99,62 @@ export default class Index extends Component {
 
                     {/************** NEW GAME *************/}
                     <div id="newGameBlock" className="home_box">
-                        <h2><T>CREATE_NEW_GAME</T></h2><br />
+                        <h2><T>INDEX_CREATE_NEW_GAME</T></h2><br />
                         <form className="new-task" onSubmit={this.handleSubmit.bind(this)} >
-                            <strong><T>NEW_GAME_NAME</T></strong>
+                            <strong><T>INDEX_NEW_GAME_NAME</T></strong>
                             <input
                                 type="text"
                                 ref="gameName"
-                                defaultValue={i18n.__('NEW_GAME_NAME_VALUE')}
-                                placeholder={i18n.__('NEW_GAME_NAME')}
+                                defaultValue={i18n.__('INDEX_NEW_GAME_NAME_VALUE')}
+                                placeholder={i18n.__('INDEX_NEW_GAME_NAME')}
                             /><br />
-                            <strong><T>NEW_GAME_SIZE</T></strong>
+                            <strong><T>INDEX_NEW_GAME_SIZE</T></strong>
                             <input
                                 type="number"
                                 min="6"
                                 max="30"
                                 ref="gameSize"
                                 defaultValue="19"
-                                placeholder={i18n.__('NEW_GAME_SIZE')}
+                                placeholder={i18n.__('INDEX_NEW_GAME_SIZE')}
                             /><br />
-                            <strong><T>NEW_GAME_INVITATION</T></strong>
+                            <strong><T>INDEX_NEW_GAME_INVITATION</T></strong>
                             <input
                                 type="text"
                                 ref="gameOpponent"
-                                placeholder={i18n.__('NEW_GAME_INVITATION_USERNAME')}
+                                placeholder={i18n.__('INDEX_NEW_GAME_INVITATION_USERNAME')}
                             /><br />
-                            <input type="submit" value={i18n.__('NEW_GAME_SUBMIT')}/>
+                            <input type="submit" value={i18n.__('INDEX_NEW_GAME_SUBMIT')}/>
                         </form>
                     </div>
 
                     {/*************** GAME STATS ********************/}
                     <div id="gamesStats" className="home_box">
-                        <h2><T>STATS_TITLE</T></h2><br />
+                        <h2><T>INDEX_STATS_TITLE</T></h2><br />
 
                         <div className="home_box_row">
                             <div className="home_box_col40 winnerTrophy"></div>
-                            <div className="home_box_col230"> <T>GAMES_WIN</T></div>
+                            <div className="home_box_col230"> <T>INDEX_GAMES_WIN</T></div>
                             <div className="home_box_col90 alright">{this.props.winGames}</div>
                         </div>
                         <div className="home_box_row">
                             <div className="home_box_col40 loserTrophy"></div>
-                            <div className="home_box_col230"> <T>GAMES_LOSE</T></div>
+                            <div className="home_box_col230"> <T>INDEX_GAMES_LOSE</T></div>
                             <div className="home_box_col90 alright">{this.props.loseGames}</div>
                         </div>
                         <div className="home_box_row">
                             <div className="home_box_col40 drawTrophy"></div>
-                            <div className="home_box_col230"> <T>GAMES_DRAW</T></div>
+                            <div className="home_box_col230"> <T>INDEX_GAMES_DRAW</T></div>
                             <div className="home_box_col90 alright">{this.props.drawGames}</div>
                         </div>
                     </div>
 
                     {/*********** LAUNCHED GAMES ***************/}
                     <div id="gamesLaunched" className="home_box">
-                        <h2><T>STATS_LAUNCHED</T></h2><br />
+                        <h2><T>INDEX_STATS_LAUNCHED</T></h2><br />
 
                         <div className="home_box_row">
                             <div className="home_box_col125">&nbsp;</div>
-                            <div className="home_box_col125"><strong><T>OPPONENT</T></strong></div>
+                            <div className="home_box_col125"><strong><T>INDEX_OPPONENT</T></strong></div>
                             <div className="home_box_col110">&nbsp;</div>
                         </div>
                         {this.renderLaunchedGames()}
@@ -162,15 +162,15 @@ export default class Index extends Component {
 
                     {/*********** LASTS GAMES ***************/}
                     <div id="lastGames" className="home_box">
-                        <h2><T>GAMES_LASTS</T> (<a href="/history"><T>INDEX_SEE_ALL</T></a>)</h2><br />
+                        <h2><T>INDEX_GAMES_LASTS</T> (<a href="/history"><T>INDEX_SEE_ALL</T></a>)</h2><br />
                         {this.renderLastGames()}
                     </div>
 
                     {/*********** FIND A GAME ***************/}
                     <div id="findGame" className="home_box">
-                        <h2><T>FIND_A_GAME</T></h2><br />
+                        <h2><T>INDEX_FIND_A_GAME</T></h2><br />
                         <div className="home_box_row">
-                            <div className="home_box_col250"><strong><T>OPPONENT</T></strong></div>
+                            <div className="home_box_col250"><strong><T>INDEX_OPPONENT</T></strong></div>
                             <div className="home_box_col110">&nbsp;</div>
                         </div>
                         {this.renderFindGame()}
@@ -178,10 +178,10 @@ export default class Index extends Component {
 
                     {/*********** WATCH GAME ***************/}
                     <div id="findGame" className="home_box">
-                        <h2><T>WATCH_A_GAME</T></h2><br />
+                        <h2><T>INDEX_WATCH_A_GAME</T></h2><br />
                         <div className="home_box_row">
-                            <div className="home_box_col125"><strong><T>PLAYER_ONE</T></strong></div>
-                            <div className="home_box_col125"><strong><T>PLAYER_TWO</T></strong></div>
+                            <div className="home_box_col125"><strong><T>INDEX_PLAYER_ONE</T></strong></div>
+                            <div className="home_box_col125"><strong><T>INDEX_PLAYER_TWO</T></strong></div>
                             <div className="home_box_col110">&nbsp;</div>
                         </div>
                         {this.renderWatchGames()}

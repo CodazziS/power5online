@@ -12,7 +12,7 @@ export default class LaunchedGame extends Component {
             <div className="home_box_row">
                 <div className="home_box_col250">{game.authorUsername}</div>
                 <div className="home_box_col110 alright">
-                    <button onClick={this.props.onClick.bind(this)}><T>JOIN_GAME</T></button>
+                    <button onClick={this.props.onClick.bind(this)}><T>PART_FIND_GAME_JOIN</T></button>
                 </div>
             </div>
         );
