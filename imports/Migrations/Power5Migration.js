@@ -149,7 +149,36 @@ export default class Power5Migration {
                 down() {
                 }
             });
-            Migrations.migrateTo(4);
+
+            Migrations.add({
+                version: 5,
+                name: 'Fix stepHistory',
+                up() {
+                    let boards = Boards.find().fetch();
+                    let i = 0;
+                    for (i in boards) {
+                        if (boards.hasOwnProperty(i)) {
+                            if (boards[i].stepHistory === null) {
+                                let stepHistory = [];
+                                let s;
+
+                                for (s = 0; s <= boards[i].step; s++) {
+                                    stepHistory.push(null);
+                                }
+
+                                Boards.update(boards[i]._id, {
+                                    $set: {
+                                        stepHistory
+                                    },
+                                });
+                            }
+                        }
+                    }
+                },
+                down() {
+                }
+            });
+            Migrations.migrateTo(5);
         }
 
     }
