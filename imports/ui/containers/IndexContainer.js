@@ -1,3 +1,5 @@
+/*global IndexContainer*/
+/*eslint no-undef: "error"*/
 import { Meteor } from 'meteor/meteor';
 import { Boards } from '../../api/boards';
 import { withTracker } from 'meteor/react-meteor-data';

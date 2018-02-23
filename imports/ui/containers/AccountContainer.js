@@ -1,3 +1,5 @@
+/*global AccountContainer*/
+/*eslint no-undef: "error"*/
 import { Meteor } from 'meteor/meteor';
 import { withTracker } from 'meteor/react-meteor-data';
 import Account from './pages/Account.js';
