@@ -49,7 +49,7 @@ export default class GameLine extends Component {
             }
 
             return (
-                <div className={"comp_game_line_" + putMyScore}><span className={result}></span></div>
+                <div className={'comp_game_line_' + putMyScore}><span className={result}></span></div>
             );
         }
     }
@@ -59,7 +59,7 @@ export default class GameLine extends Component {
         if (putMyOpponent) {
             let opponentUsername = (game.authorId === this.userId) ? game.opponentUsername : game.authorUsername;
             return (
-                <div className={"comp_game_line_" + putMyOpponent}>{opponentUsername}</div>
+                <div className={'comp_game_line_' + putMyOpponent}>{opponentUsername}</div>
             );
         }
     }
@@ -68,7 +68,7 @@ export default class GameLine extends Component {
         let putGameName = this.props.putGameName;
         if (putGameName) {
             return (
-                <div className={"comp_game_line_" + putGameName}>{game.game}</div>
+                <div className={'comp_game_line_' + putGameName}>{game.game}</div>
             );
         }
     }
@@ -79,7 +79,7 @@ export default class GameLine extends Component {
 
         if (putGameDate) {
             return (
-                <div className={"comp_game_line_" + putGameDate}>{game.lastActionAt.toLocaleDateString(i18n.getLocale(), dateOpt)}</div>
+                <div className={'comp_game_line_' + putGameDate}>{game.lastActionAt.toLocaleDateString(i18n.getLocale(), dateOpt)}</div>
             );
         }
     }
@@ -88,7 +88,7 @@ export default class GameLine extends Component {
         let putAuthor = this.props.putAuthor;
         if (putAuthor) {
             return (
-                <div className={"comp_game_line_" + putAuthor}>{game.authorUsername}</div>
+                <div className={'comp_game_line_' + putAuthor}>{game.authorUsername}</div>
             );
         }
     }
@@ -97,7 +97,7 @@ export default class GameLine extends Component {
         let putOpponent = this.props.putOpponent;
         if (putOpponent) {
             return (
-                <div className={"comp_game_line_" + putOpponent}>{game.opponentUsername}</div>
+                <div className={'comp_game_line_' + putOpponent}>{game.opponentUsername}</div>
             );
         }
     }
@@ -106,7 +106,7 @@ export default class GameLine extends Component {
         let putMyTurn = this.props.putMyTurn;
         if (putMyTurn) {
             return (
-                <div className={"comp_game_line_" + putMyTurn}>
+                <div className={'comp_game_line_' + putMyTurn}>
                     <strong><T>{this.isUserTurn(game) ? 'COMP_GAME_LINE_MY_TURN' : 'COMP_GAME_LINE_OPPONENT_TURN'}</T></strong>
                 </div>
             );
@@ -117,7 +117,7 @@ export default class GameLine extends Component {
         let putButtonRePlay = this.props.putButtonRePlay;
         if (putButtonRePlay) {
             return (
-                <div className={"comp_game_line_" + putButtonRePlay + " alright"}>
+                <div className={'comp_game_line_' + putButtonRePlay + ' alright'}>
                     <button onClick={this.props.onClick.bind(this, game._id)}><T>COMP_GAME_LINE_REPLAY</T></button>
                 </div>
             );
@@ -128,7 +128,7 @@ export default class GameLine extends Component {
         let putButtonVisitor = this.props.putButtonVisitor;
         if (putButtonVisitor) {
             return (
-                <div className={"comp_game_line_" + putButtonVisitor + " alright"}>
+                <div className={'comp_game_line_' + putButtonVisitor + ' alright'}>
                     <button onClick={this.props.onClick.bind(this, game._id)}><T>COMP_GAME_LINE_WATCH</T></button>
                 </div>
             );
