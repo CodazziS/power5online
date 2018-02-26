@@ -114,7 +114,8 @@ export default class Visitor extends Component {
                     <IconButton text="VISITOR_ANALYZE_CLOSE" icon="close" onClick={this.analyseButton.bind(this, false)}/>
                 </div>
             );
-        } else {
+        }
+        if (this.props.board.stepHistory[0]) {
             return (
                 <Button text="VISITOR_BUTTON_ANALYSE" onClick={this.analyseButton.bind(this, true)}/>
             );

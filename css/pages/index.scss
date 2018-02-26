@@ -1,0 +1,28 @@
+.index_content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  margin-bottom: 50px;
+}
+.index_flex_block {
+  margin: 20px;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 2px 2px 8px black;
+  max-width: 360px;
+}
+
+.index_game_launched, .index_player_history, .index_game_watcher {
+  margin-top: 30px;
+}
+
+.index_player_stats .comp_game_lines {
+  font-size: 24px;
+  text-align: left;
+  font-weight: bold;
+  line-height: 36px;
+}
+.index_player_stats .alright {
+  font-size: 36px;
+}
