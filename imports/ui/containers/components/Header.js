@@ -10,7 +10,7 @@ export default class Header extends React.Component {
         let account;
 
         if (Meteor.user()) {
-            account = <Link href="/my-account" text="MY_ACCOUNT" />;
+            account = <Link href="/my-account" text="COMP_HEADER_MY_ACCOUNT" />;
         } else {
             account = 'guest_' + localStorage.getItem('guest_id');
         }

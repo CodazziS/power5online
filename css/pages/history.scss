@@ -1,17 +1,21 @@
 .history_content {
   padding: 20px;
-  width: 80%;
+  width: 95%;
   margin-left: auto;
   margin-right: auto;
   background-color: #FFF;
+  box-shadow: 2px 2px 8px black;
+  max-width: 1000px;
 }
-.hideline {
-   display: none;
- }
 
-.history_content .home_box_row {
+.history_content .comp_game_lines {
   width: 100%;
   display: flex;
   justify-content: space-around;
   flex-wrap: wrap;
+}
+
+.history_content .comp_game_lines div {
+  height: 60px;
+  line-height: 60px;
 }

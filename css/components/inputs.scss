@@ -17,6 +17,16 @@ input[type=submit], button {
   border-radius: 4px;
   cursor: pointer;
 }
+button.iconbutton {
+  height: 40px;
+  display: inline-block;
+  width: 40px;
+  background-color: #4CAF50;
+  color: white;
+  padding: 5px 0 5px 0;
+  margin-right: 5px;
+}
+
 button.redbutton {
   background-color: indianred;
 }

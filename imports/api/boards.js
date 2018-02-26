@@ -24,22 +24,28 @@ if (Meteor.isServer) {
                 {opponentId: guestId},
                 {opponentId: null},
             ]},
-            {fields: {dots: 0, stepHistory: 0}}
+            {fields: {dots: 0}}
         );
     });
-    Meteor.publish('publicGame', function () {
+    Meteor.publish('publicGame', function (guestId) {
+        let userId = (Meteor.user()) ? Meteor.user()._id : guestId;
         return Boards.find({
             $or: [
+                {authorId: userId},
+                {opponentId: userId},
                 {private: false}
             ]}
        );
     });
-    Meteor.publish('publicGameLite', function () {
+    Meteor.publish('publicGameLite', function (guestId) {
+        let userId = (Meteor.user()) ? Meteor.user()._id : guestId;
         return Boards.find({
             $or: [
+                {authorId: userId},
+                {opponentId: userId},
                 {private: false}
             ]},
-            {fields: {dots: 0, stepHistory: 0}}
+            {fields: {dots: 0}}
         );
     });
     Meteor.publish('gameAuthorization', function (gameId) {
@@ -369,7 +375,6 @@ Meteor.methods({
         const blackPlayer = (board.creatorIsWhite === false) ? board.authorId :  board.opponentId;
         const currentUser = getCurrentUser(guest);
         let dots = board.dots;
-        let step = board.step;
         let stepHistory = board.stepHistory;
 
         check(gameId, String);
@@ -392,7 +397,7 @@ Meteor.methods({
                 whiteIsNext: !board.whiteIsNext,
                 last: row + '-' + col,
                 lastActionAt: new Date(),
-                step: step++
+                step: board.step + 1
             },
         });
 

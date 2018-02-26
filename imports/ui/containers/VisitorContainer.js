@@ -7,9 +7,9 @@ import { FlowRouter } from 'meteor/kadira:flow-router';
 import Visitor from './pages/Visitor.js';
 
 export default VisitorContainer = withTracker(() => {
-    const boardHandle = Meteor.subscribe('publicGame');
+    const boardHandle = Meteor.subscribe('publicGame', localStorage.getItem('guest_id'));
     const loading = !boardHandle.ready();
-    const board = Boards.findOne(FlowRouter.getParam('_id'));
+    const board = Boards.findOne({_id: FlowRouter.getParam('_id')});
     const boardExist = !loading && !!board;
 
     return {

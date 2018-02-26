@@ -1,0 +1,36 @@
+.comp_game_lines {
+  width: 100%;
+}
+.comp_game_lines div {
+  display: inline-block;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
+
+.comp_game_line_40 {
+  width: 40px;
+}
+.comp_game_line_90 {
+  width: 90px;
+}
+.comp_game_line_110 {
+  width: 110px;
+}
+.comp_game_line_125 {
+  width: 125px;
+}
+.comp_game_line_210 {
+  width: 210px;
+}
+.comp_game_line_230 {
+  width: 230px;
+}
+.comp_game_line_250 {
+  width: 250px;
+}
+
+.comp_game_line_auto {
+  flex: 1;
+  min-width: 100px;
+  white-space: nowrap;
+}

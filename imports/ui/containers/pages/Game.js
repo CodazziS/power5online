@@ -80,6 +80,14 @@ export default class Game extends Component {
         }
     }
 
+    winButton() {
+        let board = this.props.board;
+
+        if (!board.end) {
+            Meteor.call('boards.win', this.props.board._id, localStorage.getItem('guest_id'));
+        }
+    }
+
     replayButton() {
         let board = this.props.board;
         let currentUser = this.getCurrentUser();
@@ -97,16 +105,16 @@ export default class Game extends Component {
         let currentUser = this.getCurrentUser();
 
         if (board.replayId) {
-            return 'BUTTON_REPLAY_NEXT_GAME';
+            return 'GAME_BUTTON_REPLAY_NEXT_GAME';
         }
         if (!board.askReplay) {
-            return 'BUTTON_REPLAY';
+            return 'GAME_BUTTON_REPLAY';
         }
         if (board.askReplay !== currentUser.userId) {
-            return 'BUTTON_REPLAY_OPPONENT';
+            return 'GAME_BUTTON_REPLAY_OPPONENT';
         }
         if (board.askReplay === currentUser.userId) {
-            return 'BUTTON_REPLAY_PROPOSED';
+            return 'GAME_BUTTON_REPLAY_PROPOSED';
         }
     }
 
@@ -144,7 +152,7 @@ export default class Game extends Component {
     sendNotification(lastAction) {
         if (this.props.board.lastActionAt === lastAction) {
             Push.create(i18n.__('APP_TITLE'), {
-                body: i18n.__('MY_ROUND_TXT'),
+                body: i18n.__('GAME_MY_ROUND_NOTIF'),
                 icon: '/favicon-b.png',
                 timeout: 6,
                 onClick() {window.focus(); this.close();}
@@ -158,12 +166,12 @@ export default class Game extends Component {
         }
 
         if (current.step < 2) {
-            return <Button text="BUTTON_CANCEL_GAME" onClick={(current) => this.cancelButton(current)}/>;
+            return <Button text="GAME_BUTTON_CANCEL" onClick={(current) => this.cancelButton(current)}/>;
         }
         if (!this.isMyTurn() && (current.lastActionAt.getTime() < ((new Date()).getTime() - 1000 * 3600 * 24))) {
-            return <Button text="BUTTON_FINISH_GAME" classname="bluebutton" onClick={(current) => this.winButton(current)} />;
+            return <Button text="GAME_BUTTON_FINISH" classname="bluebutton" onClick={(current) => this.winButton(current)} />;
         }
-        return <Button text="BUTTON_ABORT_GAME" classname="redbutton" onClick={(current) => this.abordButton(current)} />;
+        return <Button text="GAME_BUTTON_ABORT" classname="redbutton" onClick={(current) => this.abordButton(current)} />;
     }
 
     checkAccess() {
@@ -196,11 +204,10 @@ export default class Game extends Component {
         if (access !== null) {
             return access;
         }
-
         document.title = current.game;
 
         if (this.isMyTurn()) {
-            document.title = i18n.__('MY_ROUND');
+            document.title = i18n.__('GAME_MY_ROUND');
             if (Meteor.user() && Meteor.user().power5Notification) {
                 Meteor.setTimeout(() => this.sendNotification(current.lastActionAt), 30000);
             }
@@ -245,7 +252,7 @@ export default class Game extends Component {
                                 checkOffText='GAME_PUBLIC'
                                 onClick={() => this.switchPrivate()}
                             />
-                            <span><T>VISITOR_LINK</T></span>
+                            <span><T>GAME_VISITOR_LINK</T></span>
                             <input
                                 type="text"
                                 className="disableInput"

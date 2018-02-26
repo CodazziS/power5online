@@ -8,7 +8,7 @@ import ReactPaginate from 'react-paginate';
 import Header from '../components/Header.js';
 import Footer from '../components/Footer.js';
 import Panel from '../components/Panel.js';
-import HistoryGame from '../parts/HistoryGame.js';
+import GamesLines from '../components/GamesLines.js';
 
 
 
@@ -21,9 +21,9 @@ export default class History extends React.Component {
         };
     }
 
-    goToGame() {
-        if (this.props.game._id !== null) {
-            FlowRouter.go('game.show', {_id: this.props.game._id});
+    goToGameVisitor(gameId) {
+        if (gameId !== null) {
+            FlowRouter.go('game.spec', {_id: gameId});
         }
     }
 
@@ -31,13 +31,17 @@ export default class History extends React.Component {
         let offset = this.state.page * this.linePerPages;
         let filteredGames = this.props.games.slice(offset, offset + this.linePerPages);
 
-        return filteredGames.map((game) => (
-            <HistoryGame
-                key={game._id}
-                game={game}
-                onClick={this.goToGame}
+        return (
+            <GamesLines
+                games={filteredGames}
+                putMyScore="40"
+                putGameName="auto"
+                putMyOpponent="auto"
+                putGameDate="auto"
+                putButtonVisitor="auto"
+                onClick={this.goToGameVisitor}
             />
-        ));
+        );
     }
 
     renderPagination() {
@@ -74,7 +78,6 @@ export default class History extends React.Component {
                 />
                 <div className="content">
                     <div className="history_content">
-                        {/*{ this.props.games.map((game) => this.renderGames(game))}*/}
                         { this.renderGames() }
                         { this.renderPagination() }
                     </div>

@@ -7,7 +7,7 @@ export default class Panel extends React.Component {
         return (
             <div className="panel">
                 <h2 className={this.props.type}><T>{this.props.text}</T></h2>
-                <a href="/"><T>GO_TO_HOME</T></a>
+                <a href="/"><T>COMP_PANEL_GO_TO_HOME</T></a>
             </div>
         );
     }
