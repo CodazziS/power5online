@@ -2,15 +2,46 @@
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
-  justify-content: space-around;
+  justify-content: center;
   margin-bottom: 50px;
+}
+.index_content h2 {
+  text-align: center;
+}
+.index_top_block {
+  width: 100%;
+  margin-top: 20px;
 }
 .index_flex_block {
   margin: 20px;
   padding: 20px;
   background-color: white;
   box-shadow: 2px 2px 8px black;
-  max-width: 360px;
+  width: 360px;
+}
+
+.index_podium {
+  margin-left: auto;
+  margin-right: auto;
+  padding: 20px;
+  background-color: white;
+  box-shadow: 2px 2px 8px #FFE57F;
+  width: 360px;
+  border: 5px outset #FFC107;
+}
+.index_podium h2 {
+  text-shadow: 2px 2px 5px #FFC107;
+  text-transform: uppercase;
+}
+.index_podium .comp_game_line_160 {
+  line-height: 24px;
+  text-align: right;
+}
+.index_podium_username {
+  font-size: 20px;
+}
+.index_podium_value {
+  line-height: 24px;
 }
 
 .index_game_launched, .index_player_history, .index_game_watcher {
@@ -20,9 +51,10 @@
 .index_player_stats .comp_game_lines {
   font-size: 24px;
   text-align: left;
-  font-weight: bold;
   line-height: 36px;
+
 }
 .index_player_stats .alright {
-  font-size: 36px;
+  font-size: 24px;
+  line-height: 24px;
 }

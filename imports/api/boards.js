@@ -185,8 +185,13 @@ Meteor.methods({
         check(game.size, Number);
         check(game.game, String);
 
-        if (game.size < 6 || game.size > 30) {
+        console.log(game.size);
+        if (game.size < 6 || game.size > 30 || isNaN(game.size)) {
             throw new Meteor.Error('bad-size');
+        }
+
+        if (game.game.length < 3) {
+            throw new Meteor.Error('bad-game-name');
         }
 
         if (game.opponent) {

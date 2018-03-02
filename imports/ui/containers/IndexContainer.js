@@ -2,6 +2,7 @@
 /*eslint no-undef: "error"*/
 import { Meteor } from 'meteor/meteor';
 import { Boards } from '../../api/boards';
+import { Options } from '../../api/options';
 import { withTracker } from 'meteor/react-meteor-data';
 import Index from './pages/Index.js';
 
@@ -9,7 +10,14 @@ export default IndexContainer = withTracker(() => {
     const boardHandle = Meteor.subscribe('myGamesLite', localStorage.getItem('guest_id'));
     const publicBoardHandle = Meteor.subscribe('publicGameLite', localStorage.getItem('guest_id'));
     const userId = (Meteor.user()) ? Meteor.user()._id : localStorage.getItem('guest_id');
-    const loading = !boardHandle.ready() || !publicBoardHandle.ready();
+    Meteor.subscribe('myUser');
+    const podiumdHandle = Meteor.subscribe('power5Options');
+
+    const loading = !boardHandle.ready() || !publicBoardHandle.ready() || !podiumdHandle.ready();
+
+    const user = Meteor.users.findOne();
+    const podium = Options.findOne({name: 'podium'});
+    const usersExist = !loading && !!user;
 
     const launchGames = Boards.find(
         {$and: [{end: false}, {$or: [{authorId: userId}, {opponentId: userId}]}]},
@@ -27,33 +35,6 @@ export default IndexContainer = withTracker(() => {
         {$and: [{end: false}, {opponentId: { $ne: null }}, {private: false}]},
         {sort:{lastActionAt: -1, createdAt: -1}}
     );
-    const winGames = Boards.find(
-        {$and: [
-            {end: true},
-            {$or: [
-                {$and: [{authorId: userId}, {winnerIsAuthor: true}]},
-                {$and: [{opponentId: userId}, {winnerIsAuthor: false}]}
-            ]}
-        ]}
-    );
-    const loseGames = Boards.find(
-        {$and: [
-                {end: true},
-                {$or: [
-                        {$and: [{authorId: userId}, {winnerIsAuthor: false}]},
-                        {$and: [{opponentId: userId}, {winnerIsAuthor: true}]}
-                    ]}
-            ]}
-    );
-    const drawGames = Boards.find(
-        {$and: [
-                {end: true},
-                {$or: [
-                        {$and: [{authorId: userId}, {draw: true}]},
-                        {$and: [{opponentId: userId}, {draw: true}]}
-                    ]}
-            ]}
-    );
 
     return {
         loading,
@@ -61,8 +42,11 @@ export default IndexContainer = withTracker(() => {
         lastGames: !loading ? lastGames.fetch() : [],
         findGame: !loading ? findGame.fetch() : [],
         watchGame: !loading ? watchGame.fetch() : [],
-        winGames: !loading ? winGames.count() : [],
-        loseGames: !loading ? loseGames.count() : [],
-        drawGames: !loading ? drawGames.count() : [],
+        podium: !loading ? podium : [],
+        // winGames: !loading ? winGames.count() : [],
+        // loseGames: !loading ? loseGames.count() : [],
+        // drawGames: !loading ? drawGames.count() : [],
+        usersExist,
+        user: usersExist ? user : null,
     };
 })(Index);
