@@ -19,7 +19,7 @@ function countStep(dots, size) {
 
 export default class Power5Migration {
 
-    constructor() {
+    init() {
         if (Meteor.isServer) {
             Migrations.add({
                 version: 1,

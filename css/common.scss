@@ -22,7 +22,9 @@ a {
   text-decoration: none;
   color: initial;
 }
-
+.lightlink {
+  color: #009688;
+}
 h2 {
   margin-bottom: 15px;
 }
@@ -50,5 +52,27 @@ h2 {
 }
 .drawTrophy:after {
   content: '\1F3F3';
+  font-size: 24px;
+}
+.scoreTrophy:after {
+  content: '\1F4AF';
+  //content: '\1F4B0';
+  font-size: 24px;
+}
+.totalTrophy:after {
+  content: '\1F3B2';
+  font-size: 24px;
+}
+
+.weekIcon:after {
+  content: '\1F6B4';
+  font-size: 24px;
+}
+.lastWeekIcon:after {
+  content: '\37';
+  font-size: 24px;
+}
+.lastMonthIcon:after {
+  content: '\1F4C5';
   font-size: 24px;
 }

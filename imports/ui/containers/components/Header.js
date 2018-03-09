@@ -21,8 +21,8 @@ export default class Header extends React.Component {
                     <h1>
                         <a href="/">
                             <img src="/favicon.png" />
-                            <T>{this.props.title}</T>
                         </a>
+                        <T>{this.props.title}</T>
                     </h1>
                 </div>
                 <div className="header_account">

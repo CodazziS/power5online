@@ -8,7 +8,7 @@ if (Meteor.isServer) {
             return Meteor.users.find(
                 {_id: Meteor.user()._id},
                 {
-                    fields: {_id: 1, power5Notification: 1, username: 1, power5Username: 1}
+                    fields: {_id: 1, power5Notification: 1, username: 1, power5Username: 1, power5Stats: 1}
                 }
             );
         }
@@ -49,6 +49,9 @@ Meteor.methods({
                 throw new Meteor.Error('username-to-short');
             }
 
+            if (value.length > 11) {
+                throw new Meteor.Error('username-to-long');
+            }
 
             if (value.toLowerCase() !== Meteor.user().username.toLowerCase() &&
                 Meteor.users.find({$text: {$search: value, $caseSensitive :false}}).count() > 0) {
