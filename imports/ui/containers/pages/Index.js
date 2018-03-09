@@ -50,7 +50,6 @@ export default class Index extends Component {
     renderPodium() {
         const T = i18n.createComponent();
         let podium = this.props.podium.value;
-        console.log(podium);
 
         return (
             <div className="index_podium">
@@ -67,11 +66,11 @@ export default class Index extends Component {
                     </div>
                     <div className="comp_game_line_160">
                         <span className="index_podium_username">{podium.week.best.user}</span>
-                        <span className="index_podium_value"> ({podium.week.best.val})</span>
+                        <span className="index_podium_value"> ({podium.week.best.val}<T>INDEX_PODIUM_PTS</T>)</span>
                     </div>
                     <div className="comp_game_line_160">
                         <span className="index_podium_username">{podium.month.best.user}</span>
-                        <span className="index_podium_value"> ({podium.month.best.val})</span>
+                        <span className="index_podium_value"> ({podium.month.best.val}<T>INDEX_PODIUM_PTS</T>)</span>
                     </div>
                 </div>
                 <div className="comp_game_lines">
@@ -155,9 +154,9 @@ export default class Index extends Component {
     }
     renderPlayerStats() {
         const T = i18n.createComponent();
+        let user = Meteor.user();
 
-        if (Meteor.user() || !user.power5Stats.week) {
-            let user = Meteor.user();
+        if (Meteor.user() && user.power5Stats.week) {
             return (
                 <div className="index_player_stats">
                     <h2><T>INDEX_STATS</T></h2>
@@ -283,7 +282,7 @@ export default class Index extends Component {
 
     render() {
         const T = i18n.createComponent();
-        console.log(this.props);
+
         if (this.props.loading) {
             return (<Panel type='warn' text='INDEX_LOADING' />);
         }

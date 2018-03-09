@@ -31,7 +31,7 @@ export default class Statistics {
             users = Meteor.users.find().fetch();
         } else {
             users = Meteor.users.find({
-                "lastActiveDate": {
+                'lastActiveDate': {
                     $gte: new Date((new Date().getTime()) - 1000 * 60 * 60)
                 }
             }).fetch();
@@ -100,8 +100,8 @@ export default class Statistics {
                         {authorId: user._id},
                         {opponentId: user._id},
                     ]},
-                {authorType: "meteor"},
-                {opponentType: "meteor"},
+                {authorType: 'meteor'},
+                {opponentType: 'meteor'},
                 {end: true},
             ]}).fetch();
         return this._calcStats(user, boards);

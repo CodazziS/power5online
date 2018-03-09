@@ -12,6 +12,6 @@ Meteor.startup(() => {
     let statistics = new Statistics();
     statistics.calc(true);
 
-    Meteor.setInterval(function() { statistics.calc(false) }, 1000 * 60 * 5);
-    Meteor.setInterval(function() { statistics.calc(true) }, 1000 * 60 * 60);
+    Meteor.setInterval(function() { statistics.calc(false); }, 1000 * 60 * 5);
+    Meteor.setInterval(function() { statistics.calc(true); }, 1000 * 60 * 60);
 });

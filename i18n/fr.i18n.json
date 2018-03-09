@@ -62,8 +62,9 @@
   "INDEX_PODIUM_LAST_WEEK": "Semaine dernière",
   "INDEX_PODIUM_LAST_MONTH": "Mois dernier",
   "INDEX_PODIUM_BEST": "Meilleur joueur",
-  "INDEX_PODIUM_MAX": "Le plus joueur",
-  "INDEX_PODIUM_LOSER": "Le plus perdant",
+  "INDEX_PODIUM_MAX": "Nombre de parties",
+  "INDEX_PODIUM_LOSER": "Nombre de défaites",
+  "INDEX_PODIUM_PTS": " pts",
 
   "INDEX_STATS": "Mes statistiques",
   "INDEX_STATS_WIN_WEEK": "Parties gagnées cette semaine",
