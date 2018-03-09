@@ -117,8 +117,8 @@ export default class Statistics {
                         {authorId: user._id},
                         {opponentId: user._id},
                     ]},
-                {authorType: "meteor"},
-                {opponentType: "meteor"},
+                {authorType: 'meteor'},
+                {opponentType: 'meteor'},
                 {end: true},
                 {lastActionAt: {
                     $gte: firstDayOfLastMonth
@@ -137,8 +137,8 @@ export default class Statistics {
                         {authorId: user._id},
                         {opponentId: user._id},
                     ]},
-                {authorType: "meteor"},
-                {opponentType: "meteor"},
+                {authorType: 'meteor'},
+                {opponentType: 'meteor'},
                 {end: true},
                 {lastActionAt: {
                         $gte: firstDayOfLastWeek
@@ -157,8 +157,8 @@ export default class Statistics {
                         {authorId: user._id},
                         {opponentId: user._id},
                     ]},
-                {authorType: "meteor"},
-                {opponentType: "meteor"},
+                {authorType: 'meteor'},
+                {opponentType: 'meteor'},
                 {end: true},
                 {lastActionAt: {
                         $gte: firstDayOfLastWeek
