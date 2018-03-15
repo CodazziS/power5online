@@ -156,7 +156,7 @@ export default class Index extends Component {
         const T = i18n.createComponent();
         let user = Meteor.user();
 
-        if (Meteor.user() && user.power5Stats.week) {
+        if (Meteor.user() && user.power5Stats && user.power5Stats.week) {
             return (
                 <div className="index_player_stats">
                     <h2><T>INDEX_STATS</T></h2>
@@ -285,6 +285,9 @@ export default class Index extends Component {
 
         if (this.props.loading) {
             return (<Panel type='warn' text='INDEX_LOADING' />);
+        }
+        if (this.props.user.power5Username === undefined) {
+            Meteor.call('users.setDefaultUsername');
         }
         return (
             <div className="container">

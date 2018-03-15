@@ -66,5 +66,15 @@ Meteor.methods({
         }
     },
 
+    'users.setDefaultUsername'() {
+        if (Meteor.user()) {
+            Meteor.users.update(Meteor.user()._id, {
+                $set: {
+                    power5Username: Meteor.user().username,
+                },
+            });
+        }
+    },
+
 });
 
