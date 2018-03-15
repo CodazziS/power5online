@@ -286,7 +286,7 @@ export default class Index extends Component {
         if (this.props.loading) {
             return (<Panel type='warn' text='INDEX_LOADING' />);
         }
-        if (this.props.user.power5Username === undefined) {
+        if (Meteor.user() && this.props.user.power5Username === undefined) {
             Meteor.call('users.setDefaultUsername');
         }
         return (
