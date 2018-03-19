@@ -130,6 +130,15 @@ export default class Statistics {
     _getLastWeekStats(user) {
         let date = new Date();
         let firstDayOfLastWeek = new Date(date.setDate(date.getDate() - date.getDay() - 7 + (date.getDay() === 0 ? -6:1)));
+        firstDayOfLastWeek.setHours(0);
+        firstDayOfLastWeek.setMinutes(0);
+        firstDayOfLastWeek.setSeconds(0);
+        firstDayOfLastWeek.setMilliseconds(0);
+        let firstDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + (date.getDay() === 0 ? -6:1)));
+        firstDayOfWeek.setHours(0);
+        firstDayOfWeek.setMinutes(0);
+        firstDayOfWeek.setSeconds(0);
+        firstDayOfWeek.setMilliseconds(0);
 
         let boards = Boards.find({
             $and: [
@@ -141,7 +150,8 @@ export default class Statistics {
                 {opponentType: 'meteor'},
                 {end: true},
                 {lastActionAt: {
-                        $gte: firstDayOfLastWeek
+                        $gte: firstDayOfLastWeek,
+                        $lte: firstDayOfWeek
                     }},
             ]}).fetch();
         return this._calcStats(user, boards);
@@ -149,8 +159,11 @@ export default class Statistics {
 
     _getWeekStats(user) {
         let date = new Date();
-        let firstDayOfLastWeek = new Date(date.setDate(date.getDate() - date.getDay() + (date.getDay() === 0 ? -6:1)));
-
+        let firstDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + (date.getDay() === 0 ? -6:1)));
+        firstDayOfWeek.setHours(0);
+        firstDayOfWeek.setMinutes(0);
+        firstDayOfWeek.setSeconds(0);
+        firstDayOfWeek.setMilliseconds(0);
         let boards = Boards.find({
             $and: [
                 {$or: [
@@ -161,7 +174,7 @@ export default class Statistics {
                 {opponentType: 'meteor'},
                 {end: true},
                 {lastActionAt: {
-                        $gte: firstDayOfLastWeek
+                        $gte: firstDayOfWeek
                     }},
             ]}).fetch();
         return this._calcStats(user, boards);
