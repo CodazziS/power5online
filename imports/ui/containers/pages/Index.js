@@ -257,7 +257,7 @@ export default class Index extends Component {
     }
     renderGameWatcher() {
         const T = i18n.createComponent();
-        if (this.props.findGame.length > 0) {
+        if (this.props.watchGame.length > 0) {
             return (
                 <div className="index_game_watcher">
                     <h2><T>INDEX_GAME_WATCHER</T></h2>
