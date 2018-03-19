@@ -128,13 +128,14 @@ export default class Statistics {
     }
 
     _getLastWeekStats(user) {
-        let date = new Date();
-        let firstDayOfLastWeek = new Date(date.setDate(date.getDate() - date.getDay() - 7 + (date.getDay() === 0 ? -6:1)));
+        let dateLW = new Date();
+        let dateTW = new Date();
+        let firstDayOfLastWeek = new Date(dateLW.setDate(dateLW.getDate() - dateLW.getDay() - 7 + (dateLW.getDay() === 0 ? -6:1)));
         firstDayOfLastWeek.setHours(0);
         firstDayOfLastWeek.setMinutes(0);
         firstDayOfLastWeek.setSeconds(0);
         firstDayOfLastWeek.setMilliseconds(0);
-        let firstDayOfWeek = new Date(date.setDate(date.getDate() - date.getDay() + (date.getDay() === 0 ? -6:1)));
+        let firstDayOfWeek = new Date(dateTW.setDate(dateTW.getDate() - dateTW.getDay() + (dateTW.getDay() === 0 ? -6:1)));
         firstDayOfWeek.setHours(0);
         firstDayOfWeek.setMinutes(0);
         firstDayOfWeek.setSeconds(0);
@@ -164,6 +165,7 @@ export default class Statistics {
         firstDayOfWeek.setMinutes(0);
         firstDayOfWeek.setSeconds(0);
         firstDayOfWeek.setMilliseconds(0);
+
         let boards = Boards.find({
             $and: [
                 {$or: [
