@@ -50,7 +50,6 @@ export default class Index extends Component {
     renderPodium() {
         const T = i18n.createComponent();
         let podium = this.props.podium.value;
-
         return (
             <div className="index_podium">
                 <h2><T>INDEX_PODIUM</T></h2>
@@ -159,7 +158,7 @@ export default class Index extends Component {
         if (Meteor.user() && user.power5Stats && user.power5Stats.week) {
             return (
                 <div className="index_player_stats">
-                    <h2><T>INDEX_STATS</T></h2>
+                    <h2><T>INDEX_STATS</T> ({this.props.podium.value.lastCalculation.toLocaleTimeString()})</h2>
                     <div className="comp_game_lines">
                         <div className="comp_game_line_40"></div>
                         <div className="comp_game_line_80 alright weekIcon"></div>
@@ -257,7 +256,7 @@ export default class Index extends Component {
     }
     renderGameWatcher() {
         const T = i18n.createComponent();
-        if (this.props.findGame.length > 0) {
+        if (this.props.watchGame.length > 0) {
             return (
                 <div className="index_game_watcher">
                     <h2><T>INDEX_GAME_WATCHER</T></h2>
@@ -286,7 +285,7 @@ export default class Index extends Component {
         if (this.props.loading) {
             return (<Panel type='warn' text='INDEX_LOADING' />);
         }
-        if (Meteor.user() && this.props.user.power5Username === undefined) {
+        if (Meteor.user() && !this.props.user.power5Username) {
             Meteor.call('users.setDefaultUsername');
         }
         return (
